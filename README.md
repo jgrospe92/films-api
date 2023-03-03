@@ -69,6 +69,7 @@ composer remove tuupola/slim-jwt-auth --update-with-dependencies
 3. [Dracula Official](https://marketplace.visualstudio.com/items?itemName=dracula-theme.theme-dracula)
 
 
-# Reference
+
+### Reference
 - Sleiman Rabah
-- Vanier college CS Teacher
+- Vanier College Teacher

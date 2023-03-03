@@ -13,13 +13,17 @@ class FilmsModel extends BaseModel
 
     public function getAll(array $filters = [])
     {
-        // Queries the DB and return the list of all filmms
+        // Queries the DB and return the list of all films
         $query_values = [];
+        // WHERE 1 allows us to concatenate any filtering command
         $sql = "SELECT * FROM $this->table_name WHERE 1 ";
 
         if (isset($filters["title"]))
         {
-            $sql .= " AND title LIKE CONCAT('%',:title,'%') ";
+            // this check if it contains
+            //$sql .= " AND title LIKE CONCAT('%',:title,'%') ";
+            // this check if it starts
+            $sql .= " AND title LIKE CONCAT(:title,'%') ";
             $query_values[":title"] = $filters["title"];
         }
 
@@ -29,6 +33,37 @@ class FilmsModel extends BaseModel
             $query_values[":description"] = $filters["description"]."%";
         }
 
-        return $this->run($sql, $query_values)->fetchAll();
+        if (isset($filters['category']))
+        {
+         
+            $sql .= " AMD inner join film_category on film.film_id = film_category.film_id INNER join category on film_category.category_id = category.category_id where category.name =:name";
+            $query_values[":name"] = $filters["category"];
+        }
+
+        //return $this->run($sql, $query_values)->fetchAll();
+        return $this->paginate($sql, $query_values);
+
+
+
+        /*
+        Get category
+        SELECT name from category inner join film_category on 
+        category.category_id = film_category.category_id inner JOIN film on film.film_id = film_category.film_id WHERE film.film_id = 1
+        */
+
+        /*
+        SELECT * from film inner join film_category on film.film_id 
+        = film_category.film_id INNER join category on film_category.category_id = category.category_id where category.name = "horror" 
+
+
+        */
     }
+
+    public function getFilmById($film_id)
+    {
+             $sql = "SELECT * FROM $this->table_name WHERE film_id=:film_id";
+             return  $this->run($sql, ["film_id"=>$film_id])->fetchAll();
+    }
+
+ 
 }
