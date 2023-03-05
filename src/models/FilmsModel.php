@@ -2,6 +2,9 @@
 namespace Vanier\Api\models;
 
 use Vanier\Api\Models\BaseModel;
+/**
+ * Summary of FilmsModel
+ */
 class FilmsModel extends BaseModel
 {
 
@@ -11,6 +14,12 @@ class FilmsModel extends BaseModel
         parent::__construct();
     }
 
+    /**
+     * Summary of getAll
+     * @param array $filters
+     * @return array
+     * Sort_by title.asc or title.desc
+     */
     public function getAll(array $filters = [])
     {
         // Queries the DB and return the list of all films
@@ -33,6 +42,16 @@ class FilmsModel extends BaseModel
             $query_values[":description"] = $filters["description"]."%";
         }
 
+        if (isset($filters["sort_by"])){
+            if($filters["sort_by"] == "title.asc"){
+                $sql .= " ORDER BY title asc ";
+              
+            } elseif($filters["sort_by"] == "title.desc")
+            {
+                $sql .= " ORDER BY title desc ";
+            }
+        }
+
         if (isset($filters['category']))
         {
          
@@ -42,8 +61,6 @@ class FilmsModel extends BaseModel
 
         //return $this->run($sql, $query_values)->fetchAll();
         return $this->paginate($sql, $query_values);
-
-
 
         /*
         Get category
@@ -67,3 +84,5 @@ class FilmsModel extends BaseModel
 
  
 }
+
+?>

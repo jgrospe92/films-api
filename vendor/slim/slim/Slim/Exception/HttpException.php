@@ -90,4 +90,6 @@ class HttpException extends Exception
         $this->description = $description;
         return $this;
     }
+
+ 
 }

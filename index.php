@@ -53,7 +53,7 @@ $app->setBasePath("/films-api");
 // The callbacks must be implemented in a controller class.
 // The Vanier\Api must be used as namespace prefix.
 
-$app->get('/films', [FilmsController::class, 'getAllFilms']);
+$app->get('/films', [FilmsController::class, 'handleGetAllFilms']);
 
 $app->get('/hello', function (Request $request, Response $response, $args) {
     $response->getBody()->write("Reporting! Hello there!");    

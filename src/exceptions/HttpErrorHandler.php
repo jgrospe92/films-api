@@ -13,6 +13,7 @@ use Slim\Handlers\ErrorHandler;
 // Add custom exceptions
 use Vanier\Api\exceptions\HttpNotAcceptableException;
 use Vanier\Api\exceptions\HttpBadRequest;
+use Vanier\Api\exceptions\HttpUnprocessableContent;
 use Exception;
 use Throwable;
 
@@ -26,6 +27,7 @@ class HttpErrorHandler extends ErrorHandler
     public const SERVER_ERROR = 'SERVER_ERROR';
     public const UNAUTHENTICATED = 'UNAUTHENTICATED';
     public const NOT_ACCEPTABLE = "NOT_ACCEPTABLE";
+    public const UNPROCESSABLE_CONTENT = "UNPROCESSABLE_CONTENT";
     
     protected function respond(): ResponseInterface
     {
@@ -36,7 +38,9 @@ class HttpErrorHandler extends ErrorHandler
 
         if ($exception instanceof HttpException) {
             $statusCode = $exception->getCode();
-            $description = $exception->getMessage();
+            $description = $exception->getDescription();
+            $message = $exception->getMessage();
+            
 
             if ($exception instanceof HttpNotFoundException) {
                 $type = self::RESOURCE_NOT_FOUND;
@@ -52,6 +56,8 @@ class HttpErrorHandler extends ErrorHandler
                 $type = self::NOT_IMPLEMENTED;
             } elseif ($exception instanceof HttpNotAcceptableException){
                 $type = self::NOT_ACCEPTABLE;
+            }elseif ($exception instanceof HttpUnprocessableContent){
+                $type = self::UNPROCESSABLE_CONTENT;
             }
         }
 
@@ -68,6 +74,7 @@ class HttpErrorHandler extends ErrorHandler
             'error' => [
                 'type' => $type,
                 'description' => $description,
+                'message' => $message,
             ],
         ];
         

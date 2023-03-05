@@ -12,4 +12,5 @@ class HttpBadRequest extends HttpSpecializedException
     protected $title = '400 BAD REQUEST';
     protected $description = 'Invalid request syntax';
     
+    
 }

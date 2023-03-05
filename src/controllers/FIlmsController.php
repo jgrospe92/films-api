@@ -9,8 +9,13 @@ use Slim\Exception\HttpBadRequestException;
 use Vanier\Api\Models\FilmsModel;
 use Vanier\Api\exceptions\HttpNotAcceptableException;
 use Vanier\Api\exceptions\HttpBadRequest;
+use Vanier\Api\exceptions\HttpUnprocessableContent;
 
 
+/**
+ * Summary of FilmsController
+ * Support operations such as getAllFilms, 
+ */
 class FilmsController
 {
 
@@ -22,7 +27,7 @@ class FilmsController
       $this->film_model = new FilmsModel();
    }
    // Callback - need to return response
-   public function getAllFilms(Request $request, Response $response)
+   public function handleGetAllFilms(Request $request, Response $response)
    {
       // constant values
       define('DEFAULT_PAGE', 1);
@@ -30,13 +35,20 @@ class FilmsController
 
       // filter by title 
       $filters = $request->getQueryParams();
-  
+      
+      if ($filters){
+         foreach($filters as $key => $value){
+       
+            if(!$this->validateParams(strtolower($key))){
+               throw new HttpUnprocessableContent($request, "Invalid query parameter : " . "{".$key."}");
+            }
+         }
+      }
 
       // verify if client added a page and pageSize params
       // if client didn't add a page and pageSize params, paginate using the default values
       $page = $filters["page"] ?? DEFAULT_PAGE;
       $pageSize = $filters["pageSize"] ?? DEFAULT_PAGE_SIZE;
-
      
       // check if the params is numeric, if not throw a bad request error
       if (!is_numeric($page) || !is_numeric($pageSize))
@@ -66,4 +78,25 @@ class FilmsController
 
       return $response->withStatus(StatusCodeInterface::STATUS_OK)->withHeader("Content-type", "application/json");
    }
+
+   /**
+    * Summary of validateParams
+    * @param mixed $param
+    * @return bool
+    * return true if the given parameter is supported otherwise false 
+    */
+   function validateParams($param) : bool {
+      $params = ['language', 'category', 'title', 'description', 'special_features', 'rating', 'sort_by'];
+
+      if (in_array($param, $params)){
+         return true;
+      }
+      return false;
+   }
+
 }
+
+
+
+
+?>
