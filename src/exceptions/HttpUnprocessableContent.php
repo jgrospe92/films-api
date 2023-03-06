@@ -7,7 +7,7 @@ class HttpUnprocessableContent extends HttpSpecializedException
 {
     protected $code = 422;
     protected $message = 'Incorrect query parameter';
-    protected $title = '400 Unprocessable Content';
+    protected $title = '422 Unprocessable Content';
     protected $description = 'The requested content is not supported';
 
     

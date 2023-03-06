@@ -35,6 +35,7 @@ class HttpErrorHandler extends ErrorHandler
         $statusCode = 500;
         $type = self::SERVER_ERROR;
         $description = 'An internal error has occurred while processing your request.';
+        $message = 'Opps something went wrong';
 
         if ($exception instanceof HttpException) {
             $statusCode = $exception->getCode();

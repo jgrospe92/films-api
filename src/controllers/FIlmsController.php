@@ -39,12 +39,11 @@ class FilmsController
       if ($filters){
          foreach($filters as $key => $value){
        
-            if(!$this->validateParams(strtolower($key))){
+            if(!$this->validateParams($key)){
                throw new HttpUnprocessableContent($request, "Invalid query parameter : " . "{".$key."}");
             }
          }
       }
-
       // verify if client added a page and pageSize params
       // if client didn't add a page and pageSize params, paginate using the default values
       $page = $filters["page"] ?? DEFAULT_PAGE;
@@ -59,6 +58,10 @@ class FilmsController
       $this->film_model->setPaginationOptions($page, $pageSize);
       
       $data = $this->film_model->getAll($filters);
+
+      if (!$data['data']){
+         throw new HttpUnprocessableContent($request, "Unable to process your request, please check you query parameter");
+      }
       // json
       $json_data = json_encode($data);
       // return the response;
@@ -72,6 +75,11 @@ class FilmsController
    {
 
       $film_id = $uri_args['film_id'];
+      if (!$this->validateInputId($film_id)){
+         $msg = is_numeric($film_id) ? "The provided ID : " . "{". $film_id . "} is out of range" : "Invalid input: " . "{". $film_id . "}, expecting a number ";
+         throw new HttpUnprocessableContent($request, $msg);
+      }
+
       $data =  $this->film_model->getFilmById($film_id);
       $json_data = json_encode($data);
       $response->getBody()->write($json_data);
@@ -86,12 +94,17 @@ class FilmsController
     * return true if the given parameter is supported otherwise false 
     */
    function validateParams($param) : bool {
-      $params = ['language', 'category', 'title', 'description', 'special_features', 'rating', 'sort_by'];
+      $params = ['language', 'category', 'title', 'description', 'special_features', 'rating', 'sort_by', 'pageSize', 'page'];
 
       if (in_array($param, $params)){
          return true;
       }
       return false;
+   }
+
+   private function validateInputId($id)
+   {
+      return filter_var($id, FILTER_VALIDATE_INT, ['options'=> ['min_range' =>1, 'max_range'=>1000]]);
    }
 
 }
