@@ -49,14 +49,22 @@ class FilmsModel extends BaseModel
             $query_values[":rating"] = $filters["rating"];
         }
 
+        if (isset($filters['special_features']))
+        {
+            $sql .= " AND special_features LIKE CONCAT('%',:special_features ,'%') ";
+            $query_values[":special_features"] = $filters["special_features"];
+        }
+
 
         if (isset($filters["description"]))
         {
             $sql .= " AND description LIKE :description";
             $query_values[":description"] = $filters["description"]."%";
         }
-
+        // only sort_by title is supported
         if (isset($filters["sort_by"])){
+            // Append GROUP BY before ORDER BY
+            $sql .= " GROUP BY film.film_id ";
             if($filters["sort_by"] == "title.asc"){
                 $sql .= " ORDER BY title asc ";
               
@@ -81,8 +89,13 @@ class FilmsModel extends BaseModel
             $sql .= " AND language.name =:lang";
             $query_values["lang"] = $name;
         }
+
+        // if sort_by doesn't exists then append GROUP BY AT THE END 
+        if (!isset($filters["sort_by"])){
+            $sql .= " GROUP BY film.film_id ";
+        }
     
-        $sql .= " GROUP BY 1";
+    
         return $this->paginate($sql, $query_values);
 
     }
@@ -128,7 +141,6 @@ class FilmsModel extends BaseModel
              $sql = "SELECT * FROM $this->table_name WHERE film_id=:film_id";
              return  $this->run($sql, ["film_id"=>$film_id])->fetchAll();
     }
-
 
     /*
     Reference : Run this on myPhpAdmin
