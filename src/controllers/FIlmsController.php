@@ -57,7 +57,7 @@ class FilmsController
 
       $this->film_model->setPaginationOptions($page, $pageSize);
       
-      $data = $this->film_model->getAll($filters);
+      $data = $this->film_model->getAll($filters, $request);
 
       if (!$data['data']){
          throw new HttpUnprocessableContent($request, "Unable to process your request, please check you query parameter");

@@ -1,5 +1,6 @@
 <?php
 namespace Vanier\Api\models;
+use Psr\Http\Message\ServerRequestInterface as Request;
 
 use Vanier\Api\exceptions\HttpBadRequest;
 use Vanier\Api\Models\BaseModel;
@@ -21,15 +22,17 @@ class FilmsModel extends BaseModel
      * @return array
      * Sort_by title.asc or title.desc
      */
-    public function getAll(array $filters = [])
+    public function getAll(array $filters = [], Request $request)
     {
         // Queries the DB and return the list of all films
         $query_values = [];
         // WHERE 1 allows us to concatenate any filtering command
         //$sql = "SELECT * FROM $this->table_name WHERE 1 ";
 
-        $sql = "SELECT film.*, actor.first_name, actor.last_name from film" .
-            " inner join film_actor on film.film_id = film_actor.film_id inner join actor on actor.actor_id = film_actor.actor_id  WHERE 1 ";
+        $sql = "SELECT film.*, actor.first_name, actor.last_name, category.name as category, language.name as language from film" .
+            " inner join film_actor on film.film_id = film_actor.film_id inner join actor on actor.actor_id = film_actor.actor_id" .
+            " inner join film_category on film.film_id = film_category.film_id" .
+            " inner join category on film_category.category_id = category.category_id inner join language on language.language_id = film.language_id WHERE 1 ";
 
         if (isset($filters["title"]))
         {
@@ -67,23 +70,21 @@ class FilmsModel extends BaseModel
         {
             // Can only perform category
             $name = strtolower($filters['category']);
-            $categories = $this->getCategory($name);
-
-            return  $categories;
+            // $categories = $this->getCategory($name);
+            // return  $categories;
+            $sql .= " AND category.name =:name";
+            $query_values["name"] =  $name;
         }
 
-        if (isset($filters['language'])){
-            $languages = $this->getLanguage($filters['language']);
-            return $languages;
+        if (isset($filters['language'])){          
+            $name = ucfirst($filters['language']);
+            $sql .= " AND language.name =:lang";
+            $query_values["lang"] = $name;
         }
     
         $sql .= " GROUP BY 1";
         return $this->paginate($sql, $query_values);
 
-        /*
-        SELECT * from film inner join film_category on film.film_id 
-        = film_category.film_id INNER join category on film_category.category_id = category.category_id where category.name = "horror" 
-        */
     }
 
     /**
@@ -91,6 +92,7 @@ class FilmsModel extends BaseModel
      * @param mixed $name
      * @return array
      * Return film based on the category name
+     * depreciated 
      */
     private function getCategory($name)
     {
@@ -126,6 +128,15 @@ class FilmsModel extends BaseModel
              $sql = "SELECT * FROM $this->table_name WHERE film_id=:film_id";
              return  $this->run($sql, ["film_id"=>$film_id])->fetchAll();
     }
+
+
+    /*
+    Reference : Run this on myPhpAdmin
+    SELECT film.*, actor.first_name, actor.last_name, language.name as Lang from film 
+    inner join film_actor on film.film_id = film_actor.film_id inner join actor on actor.actor_id = film_actor.actor_id 
+    inner join film_category on film.film_id = film_category.film_id inner join category on film_category.category_id = category.category_id 
+    inner JOIN language on language.language_id = film.language_id WHERE language.name = 'English' GROUP BY film.film_id;
+    */
 
  
 }
