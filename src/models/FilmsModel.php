@@ -94,8 +94,7 @@ class FilmsModel extends BaseModel
         if (!isset($filters["sort_by"])){
             $sql .= " GROUP BY film.film_id ";
         }
-    
-    
+
         return $this->paginate($sql, $query_values);
 
     }

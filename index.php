@@ -6,6 +6,7 @@ use Vanier\Api\exceptions\HttpErrorHandler;
 use Slim\Factory\AppFactory;
 use Vanier\Api\controllers\ActorsController;
 use Vanier\Api\controllers\FilmsController;
+use Vanier\Api\controllers\CustomersController;
 use Vanier\Api\middleware\ContentNegotiationMiddleware;
 use Vanier\Api\models\ActorsModel;
 use Vanier\Api\models\FilmsModel;
@@ -53,14 +54,19 @@ $app->setBasePath("/films-api");
 // The callbacks must be implemented in a controller class.
 // The Vanier\Api must be used as namespace prefix.
 
+// Films routing 
 $app->get('/films', [FilmsController::class, 'handleGetAllFilms']);
+$app->get('/films/{film_id}', [FilmsController::class, 'handleGetFilmById']);
 
+// Testing
 $app->get('/hello', function (Request $request, Response $response, $args) {
     $response->getBody()->write("Reporting! Hello there!");    
     return $response;
 });
 
-$app->get('/films/{film_id}', [FilmsController::class, 'handleGetFilmById']);
+// customer routing
+$app->get('/customers',[CustomersController::class, 'handleGetAllCustomers']);
+
 
 // post - create a film
 $app->post('/actors', [ActorsController::class, 'handleCreateActors']);

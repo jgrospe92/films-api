@@ -6,7 +6,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Exception\HttpBadRequestException;
-use Vanier\Api\Models\FilmsModel;
+use Vanier\Api\Models\CustomersModel;
 use Vanier\Api\exceptions\HttpNotAcceptableException;
 use Vanier\Api\exceptions\HttpBadRequest;
 use Vanier\Api\exceptions\HttpUnprocessableContent;
@@ -16,19 +16,20 @@ use Vanier\Api\exceptions\HttpUnprocessableContent;
  * Summary of FilmsController
  * Support operations such as getAllFilms, 
  */
-class FilmsController
+class CustomersController
 {
 
-   private $film_model = null;
+   private $customer_model = null;
 
    // Empty constructor
    public function __construct()
    {
-      $this->film_model = new FilmsModel();
+      $this->customer_model = new CustomersModel();
    }
    // Callback - need to return response
-   public function handleGetAllFilms(Request $request, Response $response)
+   public function handleGetAllCustomers(Request $request, Response $response)
    {
+
       // constant values
       define('DEFAULT_PAGE', 1);
       define("DEFAULT_PAGE_SIZE", 10);
@@ -55,9 +56,9 @@ class FilmsController
          throw new HttpBadRequest($request);
       }
 
-      $this->film_model->setPaginationOptions($page, $pageSize);
+      $this->customer_model->setPaginationOptions($page, $pageSize);
       
-      $data = $this->film_model->getAll($filters, $request);
+      $data = $this->customer_model->getAllCustomers($filters, $request);
 
       if (!$data['data']){
          throw new HttpUnprocessableContent($request, "Unable to process your request, please check you query parameter");
@@ -71,14 +72,6 @@ class FilmsController
    }
 
 
-   /**
-    * Summary of handleGetFilmById
-    * @param Request $request
-    * @param Response $response
-    * @param array $uri_args
-    * @throws HttpUnprocessableContent
-    * @return Response
-    */
    public function handleGetFilmById(Request $request, Response $response, array $uri_args)
    {
 
@@ -88,7 +81,7 @@ class FilmsController
          throw new HttpUnprocessableContent($request, $msg);
       }
 
-      $data =  $this->film_model->getFilmById($film_id);
+      $data =  $this->customer_model->getFilmById($film_id);
       $json_data = json_encode($data);
       $response->getBody()->write($json_data);
 
@@ -102,7 +95,7 @@ class FilmsController
     * return true if the given parameter is supported otherwise false 
     */
    function validateParams($param) : bool {
-      $params = ['language', 'category', 'title', 'description', 'special_features', 'rating', 'sort_by', 'pageSize', 'page', 'special_features',];
+      $params = ['first_name', 'last_name', 'city', 'country','page','pageSize'];
 
       if (in_array($param, $params)){
          return true;
@@ -110,19 +103,12 @@ class FilmsController
       return false;
    }
 
-   /**
-    * Summary of validateInputId
-    * @param mixed $id
-    * @return mixed
-    */
    private function validateInputId($id)
    {
-      return filter_var($id, FILTER_VALIDATE_INT, ['options'=> ['min_range' =>1, 'max_range'=>1000]]);
+      return filter_var($id, FILTER_VALIDATE_INT, ['options'=> ['min_range' =>1, 'max_range'=>599]]);
    }
 
 }
-
-
 
 
 ?>
