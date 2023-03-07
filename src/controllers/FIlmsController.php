@@ -2,6 +2,8 @@
 
 namespace Vanier\Api\controllers;
 // imports
+
+use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -42,6 +44,10 @@ class FilmsController
             if(!$this->validateParams($key)){
                throw new HttpUnprocessableContent($request, "Invalid query parameter : " . "{".$key."}");
             }
+            elseif(empty($value)) {
+               throw new HttpUnprocessableContent($request, "Please provide query value for : " . "{".$key."}");
+           }
+            
          }
       }
       // verify if client added a page and pageSize params
@@ -57,7 +63,15 @@ class FilmsController
 
       $this->film_model->setPaginationOptions($page, $pageSize);
       
-      $data = $this->film_model->getAll($filters, $request);
+      // catch any DB exceptions
+      try 
+      {
+         $data = $this->film_model->getAll($filters, $request);
+      }
+      catch (Exception $e)
+      {
+         throw new HttpBadRequest($request, "Invalid request Syntax, please refer to the manual");
+      }
 
       if (!$data['data']){
          throw new HttpUnprocessableContent($request, "Unable to process your request, please check you query parameter");

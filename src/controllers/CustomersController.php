@@ -2,6 +2,8 @@
 
 namespace Vanier\Api\controllers;
 // imports
+
+use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -39,9 +41,12 @@ class CustomersController
       
       if ($filters){
          foreach($filters as $key => $value){
-       
             if(!$this->validateParams($key)){
+
                throw new HttpUnprocessableContent($request, "Invalid query parameter : " . "{".$key."}");
+            }
+            elseif(empty($value)) {
+                throw new HttpUnprocessableContent($request, "Please provide query value for : " . "{".$key."}");
             }
          }
       }
@@ -57,8 +62,13 @@ class CustomersController
       }
 
       $this->customer_model->setPaginationOptions($page, $pageSize);
-      
-      $data = $this->customer_model->getAllCustomers($filters, $request);
+      // catch any DB exceptions
+      try {
+        $data = $this->customer_model->getAllCustomers($filters, $request);
+      }
+      catch (Exception $e){
+        throw new HttpBadRequest($request, "Invalid request Syntax, please refer to the manual");
+      }
 
       if (!$data['data']){
          throw new HttpUnprocessableContent($request, "Unable to process your request, please check you query parameter");
@@ -95,7 +105,7 @@ class CustomersController
     * return true if the given parameter is supported otherwise false 
     */
    function validateParams($param) : bool {
-      $params = ['first_name', 'last_name', 'city', 'country','page','pageSize'];
+      $params = ['first_name', 'last_name', 'city', 'country','page','pageSize', 'sort_by'];
 
       if (in_array($param, $params)){
          return true;
@@ -109,6 +119,3 @@ class CustomersController
    }
 
 }
-
-
-?>

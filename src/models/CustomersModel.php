@@ -26,9 +26,45 @@ class CustomersModel extends BaseModel
             $query_values[":first_name"] = $filters["first_name"];
         }
 
+        if (isset($filters['last_name']))
+        {
+            $sql .= " AND last_name LIKE CONCAT(:last_name,'%') ";
+            $query_values[":last_name"] = $filters["last_name"];
+        }
 
-        $sql .= " ORDER BY customer.customer_id ";
+        if (isset($filters['city']))
+        {
+            $sql .= " AND city LIKE CONCAT(:city,'%') ";
+            $query_values[":city"] = $filters["city"];
+        }
 
+        if (isset($filters['country']))
+        {
+            $sql .= " AND country LIKE CONCAT(:country,'%') ";
+            $query_values[":country"] = $filters["country"];
+        }
+
+        if (isset($filters['sort_by']))
+        {
+            $sql .= " GROUP BY customer.customer_id ";
+
+            if (!empty($filters['sort_by']))
+            {
+                $keyword = explode(".", $filters['sort_by']);
+                $column = $keyword[0] ?? "";
+                $order_by = $keyword[1] ?? "";
+
+                $sql .= " ORDER BY " .   $column . " " .  $order_by;
+
+            }
+        }
+
+
+
+        // if sort_by doesn't exists then append GROUP BY AT THE END 
+        if (!isset($filters["sort_by"])){
+            $sql .= " GROUP BY customer.customer_id ";
+        }
         return $this->paginate($sql, $query_values);
 
     }

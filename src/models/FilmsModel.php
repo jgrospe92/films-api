@@ -65,12 +65,13 @@ class FilmsModel extends BaseModel
         if (isset($filters["sort_by"])){
             // Append GROUP BY before ORDER BY
             $sql .= " GROUP BY film.film_id ";
-            if($filters["sort_by"] == "title.asc"){
-                $sql .= " ORDER BY title asc ";
-              
-            } elseif($filters["sort_by"] == "title.desc")
+
+            if (!empty($filters['sort_by']))
             {
-                $sql .= " ORDER BY title desc ";
+                $keyword = explode(".", $filters['sort_by']);
+                $column = $keyword[0] ?? "";
+                $order_by = $keyword[1] ?? "";
+                $sql .= " ORDER BY " .   $column . " " .  $order_by;
             }
         }
 
