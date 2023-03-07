@@ -59,8 +59,6 @@ class CustomersModel extends BaseModel
             }
         }
 
-
-
         // if sort_by doesn't exists then append GROUP BY AT THE END 
         if (!isset($filters["sort_by"])){
             $sql .= " GROUP BY customer.customer_id ";
@@ -76,10 +74,16 @@ class CustomersModel extends BaseModel
      * @return mixed
      * return customer by id 
      */
-    public function getFilmById($customer_id)
+    public function getFilmById($customer_id, array $filters = [])
     {
-             $sql = "SELECT * FROM $this->table_name WHERE customer_id=:customer_id";
-             return  $this->run($sql, ["customer_id"=>$customer_id])->fetchAll();
+
+
+             $sql = "SELECT film.* from customer INNER JOIN rental on customer.customer_id = rental.customer_id" .
+             " INNER JOIN inventory on inventory.inventory_id = rental.inventory_id" .
+             " INNER JOIN film on film.film_id = inventory.film_id WHERE customer.customer_id =:customer_id GROUP BY film.film_id ";
+
+             
+             return  $this->paginate($sql, ["customer_id"=>$customer_id]);
     }
 
 }
