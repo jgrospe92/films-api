@@ -43,7 +43,6 @@ class CustomersController
         if ($filters) {
             foreach ($filters as $key => $value) {
                 if (!$this->validateParams($key)) {
-
                     throw new HttpUnprocessableContent($request, "Invalid query parameter : " . "{" . $key . "}");
                 } elseif (empty($value)) {
                     throw new HttpUnprocessableContent($request, "Please provide query value for : " . "{" . $key . "}");
@@ -57,7 +56,7 @@ class CustomersController
 
         // check if the params is numeric, if not throw a bad request error
         if (!is_numeric($page) || !is_numeric($pageSize)) {
-            throw new HttpBadRequest($request, "expected numeric, but received alpha");
+            throw new HttpBadRequest($request, "expected numeric but received alpha");
         }
 
         $dataParams = ['page' => $page, 'pageSize' => $pageSize, 'pageMin' => 1, 'pageSizeMin' => 5, 'pageSizeMax' => 10];
@@ -99,7 +98,8 @@ class CustomersController
 
 
         $customer_id = $uri_args['customer_id'];
-        $isValidated = $this->validateInputId($customer_id, 0, 958);
+        $dataParams = ['id'=> $customer_id, 'min'=>0, 'max'=>1000];
+        $isValidated = ValidateHelper::validateInputId($dataParams);
         if (!$isValidated) {
             $msg = is_numeric($customer_id) ? "The provided ID : " . "{" . $customer_id . "} is out of range" : "Invalid input: " . "{" . $customer_id . "}, expecting a number ";
             throw new HttpUnprocessableContent($request, $msg);
@@ -123,8 +123,16 @@ class CustomersController
 
         // check if the params is numeric, if not throw a bad request error
         if (!is_numeric($page) || !is_numeric($pageSize)) {
-            throw new HttpBadRequest($request, "expected numeric, but received alpha");
+            throw new HttpBadRequest($request, "expected numeric but received alpha");
         }
+
+        $dataParams = ['page' => $page, 'pageSize' => $pageSize, 'pageMin' => 1, 'pageSizeMin' => 5, 'pageSizeMax' => 10];
+
+        if (!ValidateHelper::validatePagingParams($dataParams))
+        {
+           throw new HttpUnprocessableContent($request, "Out of range, unable to process your request, please consult the manual"); 
+        }
+  
         // set pagination
         $this->customer_model->setPaginationOptions($page, $pageSize);
 
@@ -137,7 +145,13 @@ class CustomersController
             throw new HttpBadRequest($request, "Invalid request Syntax, please refer to the manual");
         }
 
+        // if the returned data is empty
+        if (!$data['data']){
+            throw new HttpUnprocessableContent($request, "Unable to process your request, please check your query parameter or consult the documentation");
+         }
+         // 
 
+        // process the data and return the response as json format
         $json_data = json_encode($data);
         $response->getBody()->write($json_data);
         return $response->withStatus(StatusCodeInterface::STATUS_OK)->withHeader("Content-type", "application/json");
@@ -159,15 +173,5 @@ class CustomersController
         return false;
     }
 
-    /**
-     * Summary of validateInputId
-     * @param mixed $id
-     * @param mixed $min
-     * @param mixed $max
-     * @return mixed
-     */
-    private function validateInputId($id, $min, $max)
-    {
-        return filter_var($id, FILTER_VALIDATE_INT, ['options' => ['min_range' => $min, 'max_range' => $max]]);
-    }
+
 }

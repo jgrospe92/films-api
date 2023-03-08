@@ -60,7 +60,7 @@ class FilmsController
         // check if the params is numeric, if not throw a bad request error
         if (!is_numeric($page) || !is_numeric($pageSize))
         {
-           throw new HttpBadRequest($request, "expected numeric, but received alpha");
+           throw new HttpBadRequest($request, "expected numeric but received alpha");
         }
 
       $dataParams = ['page' => $page, 'pageSize' => $pageSize, 'pageMin' => 1, 'pageSizeMin' => 5, 'pageSizeMax' => 10];
@@ -106,7 +106,8 @@ class FilmsController
    {
 
       $film_id = $uri_args['film_id'];
-      if (!$this->validateInputId($film_id)){
+      $dataParams = ['id'=>$film_id, "min"=>1,"max"=>1000];
+      if (!ValidateHelper::validateInputId($dataParams)){
          $msg = is_numeric($film_id) ? "The provided ID : " . "{". $film_id . "} is out of range" : "Invalid input: " . "{". $film_id . "}, expecting a number ";
          throw new HttpUnprocessableContent($request, $msg);
       }
@@ -133,15 +134,6 @@ class FilmsController
       return false;
    }
 
-   /**
-    * Summary of validateInputId
-    * @param mixed $id
-    * @return mixed
-    */
-   private function validateInputId($id)
-   {
-      return filter_var($id, FILTER_VALIDATE_INT, ['options'=> ['min_range' =>1, 'max_range'=>1000]]);
-   }
 
 }
 

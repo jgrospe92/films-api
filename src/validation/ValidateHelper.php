@@ -47,6 +47,17 @@ class ValidateHelper
         }
     }
 
+    
+   /**
+    * Summary of validateInputId
+    * @param mixed $id
+    * @return mixed
+    */
+   public static function validateInputId(array $dataParams)
+   {
+      return filter_var($dataParams['id'], FILTER_VALIDATE_INT, ['options'=> ['min_range' =>$dataParams['min'], 'max_range'=>$dataParams['max']]]);
+   }
+
     function testValidatePersonInfo()
     {
         // The array containing the data to be validated.
