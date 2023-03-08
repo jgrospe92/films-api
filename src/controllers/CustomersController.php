@@ -12,6 +12,7 @@ use Vanier\Api\Models\CustomersModel;
 use Vanier\Api\exceptions\HttpNotAcceptableException;
 use Vanier\Api\exceptions\HttpBadRequest;
 use Vanier\Api\exceptions\HttpUnprocessableContent;
+use Vanier\Api\exceptions\HttpNotFound;
 use Vanier\Api\Validation\ValidateHelper;
 
 
@@ -74,7 +75,7 @@ class CustomersController
         }
 
         if (!$data['data']) {
-            throw new HttpUnprocessableContent($request, "Unable to process your request, please check you query parameter");
+            throw new HttpNotFound($request);
         }
         // json
         $json_data = json_encode($data);
@@ -146,7 +147,7 @@ class CustomersController
 
         // if the returned data is empty
         if (!$data['data']){
-            throw new HttpUnprocessableContent($request, "Unable to process your request, please check your query parameter or consult the documentation");
+            throw new HttpNotFound($request);
          }
          // 
 
@@ -164,7 +165,7 @@ class CustomersController
      */
     function validateParams($param): bool
     {
-        $params = ['first_name', 'last_name', 'city', 'country', 'page', 'pageSize', 'sort_by', 'rating', 'special_features'];
+        $params = ['first_name', 'last_name', 'city', 'country', 'page', 'pageSize', 'sort_by', 'rating', 'special_features', 'category'];
 
         if (in_array($param, $params)) {
             return true;

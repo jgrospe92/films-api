@@ -14,6 +14,7 @@ use Slim\Handlers\ErrorHandler;
 use Vanier\Api\exceptions\HttpNotAcceptableException;
 use Vanier\Api\exceptions\HttpBadRequest;
 use Vanier\Api\exceptions\HttpUnprocessableContent;
+use Vanier\Api\exceptions\HttpNotFound;
 use Exception;
 use Throwable;
 
@@ -43,7 +44,7 @@ class HttpErrorHandler extends ErrorHandler
             $message = $exception->getMessage();
             
 
-            if ($exception instanceof HttpNotFoundException) {
+            if ($exception instanceof HttpNotFound) {
                 $type = self::RESOURCE_NOT_FOUND;
             } elseif ($exception instanceof HttpMethodNotAllowedException) {
                 $type = self::NOT_ALLOWED;

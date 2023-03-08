@@ -12,6 +12,7 @@ use Vanier\Api\Models\FilmsModel;
 use Vanier\Api\exceptions\HttpNotAcceptableException;
 use Vanier\Api\exceptions\HttpBadRequest;
 use Vanier\Api\exceptions\HttpUnprocessableContent;
+use Vanier\Api\exceptions\HttpNotFound;
 use Vanier\Api\Validation\ValidateHelper;
 
 
@@ -83,7 +84,7 @@ class FilmsController
       }
 
       if (!$data['data']){
-         throw new HttpUnprocessableContent($request, "Unable to process your request, please check your query parameter or consult the documentation");
+         throw new HttpNotFound($request, "please check your query parameter or consult the documentation");
       }
       // json
       $json_data = json_encode($data);
@@ -113,6 +114,9 @@ class FilmsController
       }
 
       $data =  $this->film_model->getFilmById($film_id);
+      if (!$data){
+         throw new HttpNotFound($request);
+      }
       $json_data = json_encode($data);
       $response->getBody()->write($json_data);
 
