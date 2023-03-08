@@ -6,6 +6,9 @@ require_once("validations/Validator.php");
 
 use Vanier\Api\Validations\Validator;
 
+/**
+ * Summary of ValidateHelper
+ */
 class ValidateHelper
 {
 
@@ -56,6 +59,33 @@ class ValidateHelper
    public static function validateInputId(array $dataParams)
    {
       return filter_var($dataParams['id'], FILTER_VALIDATE_INT, ['options'=> ['min_range' =>$dataParams['min'], 'max_range'=>$dataParams['max']]]);
+   }
+
+
+
+   /**
+    * Summary of validateDateInput
+    * @param mixed $date
+    * @return bool 
+    * Validate date input
+    */
+   public static function validateDateInput(array $date){
+
+    $data = array('from_rentalDate'=> $date['from_rentalDate'], 'to_rentalDate'=>$date['to_rentalDate']);
+
+    $rules = array(
+                    'from_rentalDate' => [['dateFormat', 'Y-m-d']],
+                    'to_rentalDate' => [['dateFormat', 'Y-m-d']]
+                    );
+    $validator = new Validator($data, [], 'en');
+     // Important: map the validation rules before calling validate()
+    $validator->mapFieldsRules($rules);
+    if ($validator->validate()) {
+        return true;
+    } else {
+        return false;
+    }
+
    }
 
     function testValidatePersonInfo()

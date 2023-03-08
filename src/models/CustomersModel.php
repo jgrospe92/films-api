@@ -79,7 +79,7 @@ class CustomersModel extends BaseModel
         // Queries the DB and return the list of all films
         $query_values = [];
         
-        $sql = "SELECT film.*, category.name from customer INNER JOIN rental on customer.customer_id = rental.customer_id" .
+        $sql = "SELECT film.*, category.name, rental.rental_date from customer INNER JOIN rental on customer.customer_id = rental.customer_id" .
         " INNER JOIN inventory on inventory.inventory_id = rental.inventory_id" .
         " INNER JOIN film on film.film_id = inventory.film_id " .
         " INNER JOIN film_category on film_category.film_id = film.film_id INNER JOIN category on film_category.category_id = category.category_id" .
@@ -108,6 +108,13 @@ class CustomersModel extends BaseModel
             // return  $categories;
             $sql .= " AND category.name LIKE CONCAT(:name, '%')";
             $query_values["name"] =  $name;
+        }
+
+        if (isset($filters['from_rentalDate']) && isset($filters['to_rentalDate']))
+        {
+            $sql .= " AND DATE(rental.rental_date) BETWEEN :from_rentalDate AND :to_rentalDate ";
+            $query_values['from_rentalDate'] = $filters['from_rentalDate'];
+            $query_values['to_rentalDate'] = $filters['to_rentalDate'];
         }
     
 

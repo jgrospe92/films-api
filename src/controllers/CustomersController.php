@@ -99,8 +99,8 @@ class CustomersController
 
 
         $customer_id = $uri_args['customer_id'];
-       
-        $dataParams = ['id'=> $customer_id, 'min'=>1, 'max'=>1000];
+
+        $dataParams = ['id' => $customer_id, 'min' => 1, 'max' => 1000];
         $isValidated = ValidateHelper::validateInputId($dataParams);
         if (!$isValidated) {
             $msg = is_numeric($customer_id) ? "The provided ID : " . "{" . $customer_id . "} is out of range" : "Invalid input: " . "{" . $customer_id . "}, expecting a number ";
@@ -130,11 +130,23 @@ class CustomersController
 
         $dataParams = ['page' => $page, 'pageSize' => $pageSize, 'pageMin' => 1, 'pageSizeMin' => 5, 'pageSizeMax' => 10];
 
-        if (!ValidateHelper::validatePagingParams($dataParams))
-        {
-           throw new HttpUnprocessableContent($request, "Out of range, unable to process your request, please consult the manual"); 
+        if (!ValidateHelper::validatePagingParams($dataParams)) {
+            throw new HttpUnprocessableContent($request, "Out of range, unable to process your request, please consult the manual");
         }
-  
+
+        $hasKey['from_rentalDate'] = isset($filters['from_rentalDate']) ?? '';
+        $hasKey['to_rentalDate'] = isset($filters['to_rentalDate']) ?? '';
+        // validates date
+        if ($hasKey['from_rentalDate'] && !$hasKey['to_rentalDate']) {
+            throw new HttpBadRequest($request, "required parameter : to_rentalDate");
+        } elseif (!$hasKey['from_rentalDate'] && $hasKey['to_rentalDate']) {
+            throw new HttpBadRequest($request, "required parameter : from_rentalDate");
+        } elseif ($hasKey['from_rentalDate'] && $hasKey['to_rentalDate']) {
+            $date = ['from_rentalDate'=> $filters['from_rentalDate'], 'to_rentalDate'=> $filters['to_rentalDate']];
+            if (!ValidateHelper::validateDateInput($date)) {
+                throw new HttpBadRequest($request, "expected from_rentalDate and to_rentalDate dateformat 'yyyy-mm-dd' please check the documentation");
+            }
+        }
         // set pagination
         $this->customer_model->setPaginationOptions($page, $pageSize);
         // catch any DB exceptions
@@ -146,10 +158,10 @@ class CustomersController
         }
 
         // if the returned data is empty
-        if (!$data['data']){
+        if (!$data['data']) {
             throw new HttpNotFound($request);
-         }
-         // 
+        }
+        // 
 
         // process the data and return the response as json format
         $json_data = json_encode($data);
@@ -165,13 +177,14 @@ class CustomersController
      */
     function validateParams($param): bool
     {
-        $params = ['first_name', 'last_name', 'city', 'country', 'page', 'pageSize', 'sort_by', 'rating', 'special_features', 'category'];
+        $params = [
+            'first_name', 'last_name', 'city', 'country', 'page', 'pageSize', 'sort_by', 'rating',
+            'special_features', 'category', 'rental_date', 'from_rentalDate', 'to_rentalDate'
+        ];
 
         if (in_array($param, $params)) {
             return true;
         }
         return false;
     }
-
-
 }
