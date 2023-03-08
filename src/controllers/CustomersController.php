@@ -52,8 +52,8 @@ class CustomersController
         }
         // verify if client added a page and pageSize params
         // if client didn't add a page and pageSize params, paginate using the default values
-        $page = $filters["page"] ?? DEFAULT_PAGE;
-        $pageSize = $filters["pageSize"] ?? DEFAULT_PAGE_SIZE;
+        $page = $filters["page"] ?? self::DEFAULT_PAGE;
+        $pageSize = $filters["pageSize"] ?? self::DEFAULT_PAGE_SIZE;
 
         // check if the params is numeric, if not throw a bad request error
         if (!is_numeric($page) || !is_numeric($pageSize)) {

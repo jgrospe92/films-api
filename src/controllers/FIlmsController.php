@@ -53,6 +53,7 @@ class FilmsController
             
          }
       }
+
       // verify if client added a page and pageSize params
       // if client didn't add a page and pageSize params, paginate using the default values
       $page = $filters["page"] ?? DEFAULT_PAGE;

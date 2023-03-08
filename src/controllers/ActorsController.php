@@ -20,6 +20,9 @@ class ActorsController
 {
    private $actor_model = null;
 
+   const DEFAULT_PAGE = 1;
+   const DEFAULT_PAGE_SIZE = 10;
+
    // Empty constructor
    public function __construct()
    {
@@ -50,9 +53,7 @@ class ActorsController
 
    public function handleGetAllActors(Request $request, Response $response)
    {
-      // constant values
-      define('DEFAULT_PAGE', 1);
-      define("DEFAULT_PAGE_SIZE", 10);
+      
       $filters = $request->getQueryParams();
 
       if ($filters) {
@@ -67,8 +68,8 @@ class ActorsController
 
       // verify if client added a page and pageSize params
       // if client didn't add a page and pageSize params, paginate using the default values
-      $page = $filters["page"] ?? DEFAULT_PAGE;
-      $pageSize = $filters["pageSize"] ?? DEFAULT_PAGE_SIZE;
+      $page = $filters["page"] ?? self::DEFAULT_PAGE;
+      $pageSize = $filters["pageSize"] ?? self::DEFAULT_PAGE_SIZE;
 
       // check if the params is numeric, if not throw a bad request error
       if (!is_numeric($page) || !is_numeric($pageSize)) {
@@ -103,7 +104,8 @@ class ActorsController
 
    public function handleFilmByActorsId(Request $request, Response $response, array $uri_args)
    {
-      echo " hello there"; exit;
+      echo " hello there";
+      exit;
    }
 
    /**
@@ -115,7 +117,8 @@ class ActorsController
    private function validateParams($param): bool
    {
       $params = [
-         'first_name', 'last_name','page', 'pageSize', 'sort_by'];
+         'first_name', 'last_name', 'page', 'pageSize', 'sort_by'
+      ];
 
       if (in_array($param, $params)) {
          return true;
