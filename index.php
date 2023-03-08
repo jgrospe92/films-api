@@ -68,8 +68,11 @@ $app->get('/hello', function (Request $request, Response $response, $args) {
 $app->get('/customers',[CustomersController::class, 'handleGetAllCustomers']);
 $app->get('/customers/{customer_id}/films',[CustomersController::class, 'handleGetFilmByCustomerId']);
 
+// Actor routing
+$app->get('/actors', [ActorsController::class, 'handleGetAllActors']);
 
-// post - create a film
+
+// post - create a actor
 $app->post('/actors', [ActorsController::class, 'handleCreateActors']);
 
 

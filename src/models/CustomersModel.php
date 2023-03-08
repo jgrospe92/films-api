@@ -109,7 +109,6 @@ class CustomersModel extends BaseModel
             $sql .= " AND category.name LIKE CONCAT(:name, '%')";
             $query_values["name"] =  $name;
         }
-
         if (isset($filters['from_rentalDate']) && isset($filters['to_rentalDate']))
         {
             $sql .= " AND DATE(rental.rental_date) BETWEEN :from_rentalDate AND :to_rentalDate ";
@@ -117,7 +116,6 @@ class CustomersModel extends BaseModel
             $query_values['to_rentalDate'] = $filters['to_rentalDate'];
         }
     
-
         $sql .= " GROUP BY film.film_id ";
         return  $this->paginate($sql, $query_values);
  

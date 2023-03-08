@@ -1,9 +1,18 @@
 <?php
 namespace Vanier\Api\controllers;
+// imports
+
+use Exception;
+use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Exception\HttpNotFoundException;
+use Slim\Exception\HttpBadRequestException;
 use Vanier\Api\Models\ActorsModel;
+use Vanier\Api\exceptions\HttpNotAcceptableException;
+use Vanier\Api\exceptions\HttpBadRequest;
+use Vanier\Api\exceptions\HttpUnprocessableContent;
+use Vanier\Api\exceptions\HttpNotFound;
+use Vanier\Api\Validation\ValidateHelper;
 
 
 class ActorsController{
@@ -34,6 +43,10 @@ class ActorsController{
 
         // return with the right status code
         return $response;
+   }
+
+   public function handleGetAllActors(Request $request, Response $response){
+      echo "actors"; exit;
    }
 }
 
