@@ -74,16 +74,24 @@ class CustomersModel extends BaseModel
      * @return mixed
      * return customer by id 
      */
-    public function getFilmById($customer_id, array $filters = [])
+    public function getFilmById($customer_id, array $filters)
     {
+        // Queries the DB and return the list of all films
+        $query_values = [];
+        
+        $sql = "SELECT film.* from customer INNER JOIN rental on customer.customer_id = rental.customer_id" .
+        " INNER JOIN inventory on inventory.inventory_id = rental.inventory_id" .
+        " INNER JOIN film on film.film_id = inventory.film_id WHERE 1";
 
+        $sql .= " AND customer.customer_id LIKE :id ";
+        $query_values['id'] = $customer_id;
 
-             $sql = "SELECT film.* from customer INNER JOIN rental on customer.customer_id = rental.customer_id" .
-             " INNER JOIN inventory on inventory.inventory_id = rental.inventory_id" .
-             " INNER JOIN film on film.film_id = inventory.film_id WHERE customer.customer_id =:customer_id GROUP BY film.film_id ";
+    
 
-             
-             return  $this->paginate($sql, ["customer_id"=>$customer_id]);
+        $sql .= " GROUP BY film.film_id ";
+        return  $this->paginate($sql, $query_values);
+ 
+
     }
 
 }

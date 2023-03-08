@@ -98,7 +98,8 @@ class CustomersController
 
 
         $customer_id = $uri_args['customer_id'];
-        $dataParams = ['id'=> $customer_id, 'min'=>0, 'max'=>1000];
+       
+        $dataParams = ['id'=> $customer_id, 'min'=>1, 'max'=>1000];
         $isValidated = ValidateHelper::validateInputId($dataParams);
         if (!$isValidated) {
             $msg = is_numeric($customer_id) ? "The provided ID : " . "{" . $customer_id . "} is out of range" : "Invalid input: " . "{" . $customer_id . "}, expecting a number ";
@@ -135,13 +136,11 @@ class CustomersController
   
         // set pagination
         $this->customer_model->setPaginationOptions($page, $pageSize);
-
-        $data =  $this->customer_model->getFilmById($customer_id, $filters);
-
         // catch any DB exceptions
         try {
-            $data = $this->customer_model->getAllCustomers($filters, $request);
+            $data = $this->customer_model->getFilmById($customer_id, $filters);
         } catch (Exception $e) {
+            echo $e;
             throw new HttpBadRequest($request, "Invalid request Syntax, please refer to the manual");
         }
 

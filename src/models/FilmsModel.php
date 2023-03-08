@@ -81,13 +81,13 @@ class FilmsModel extends BaseModel
             $name = strtolower($filters['category']);
             // $categories = $this->getCategory($name);
             // return  $categories;
-            $sql .= " AND category.name =:name";
+            $sql .= " AND category.name LIKE CONCAT(:name, '%')";
             $query_values["name"] =  $name;
         }
 
         if (isset($filters['language'])){          
             $name = ucfirst($filters['language']);
-            $sql .= " AND language.name =:lang";
+            $sql .= " AND language.name LIKE CONCAT(:lang, '%') ";
             $query_values["lang"] = $name;
         }
 
