@@ -22,7 +22,7 @@ class FilmsModel extends BaseModel
      * @return array
      * Sort_by title.asc or title.desc
      */
-    public function getAll(array $filters = [], Request $request)
+    public function getAll(array $filters, Request $request)
     {
         // Queries the DB and return the list of all films
         $query_values = [];

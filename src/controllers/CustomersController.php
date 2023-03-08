@@ -12,6 +12,7 @@ use Vanier\Api\Models\CustomersModel;
 use Vanier\Api\exceptions\HttpNotAcceptableException;
 use Vanier\Api\exceptions\HttpBadRequest;
 use Vanier\Api\exceptions\HttpUnprocessableContent;
+use Vanier\Api\Validation\ValidateHelper;
 
 
 /**
@@ -51,12 +52,18 @@ class CustomersController
         }
         // verify if client added a page and pageSize params
         // if client didn't add a page and pageSize params, paginate using the default values
-        $page = $filters["page"] ?? self::DEFAULT_PAGE;
-        $pageSize = $filters["pageSize"] ?? self::DEFAULT_PAGE_SIZE;
+        $page = $filters["page"] ?? DEFAULT_PAGE;
+        $pageSize = $filters["pageSize"] ?? DEFAULT_PAGE_SIZE;
 
         // check if the params is numeric, if not throw a bad request error
         if (!is_numeric($page) || !is_numeric($pageSize)) {
-            throw new HttpBadRequest($request);
+            throw new HttpBadRequest($request, "expected numeric, but received alpha");
+        }
+
+        $dataParams = ['page' => $page, 'pageSize' => $pageSize, 'pageMin' => 1, 'pageSizeMin' => 5, 'pageSizeMax' => 10];
+
+        if (!ValidateHelper::validatePagingParams($dataParams)) {
+            throw new HttpUnprocessableContent($request, "Out of range, unable to process your request, please consult the manual");
         }
 
         $this->customer_model->setPaginationOptions($page, $pageSize);
@@ -90,7 +97,7 @@ class CustomersController
     public function handleGetFilmByCustomerId(Request $request, Response $response, array $uri_args)
     {
 
-       
+
         $customer_id = $uri_args['customer_id'];
         $isValidated = $this->validateInputId($customer_id, 0, 958);
         if (!$isValidated) {
@@ -116,12 +123,19 @@ class CustomersController
 
         // check if the params is numeric, if not throw a bad request error
         if (!is_numeric($page) || !is_numeric($pageSize)) {
-            throw new HttpBadRequest($request);
+            throw new HttpBadRequest($request, "expected numeric, but received alpha");
         }
         // set pagination
         $this->customer_model->setPaginationOptions($page, $pageSize);
-        
+
         $data =  $this->customer_model->getFilmById($customer_id, $filters);
+
+        // catch any DB exceptions
+        try {
+            $data = $this->customer_model->getAllCustomers($filters, $request);
+        } catch (Exception $e) {
+            throw new HttpBadRequest($request, "Invalid request Syntax, please refer to the manual");
+        }
 
 
         $json_data = json_encode($data);

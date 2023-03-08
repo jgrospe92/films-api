@@ -12,6 +12,7 @@ use Vanier\Api\Models\FilmsModel;
 use Vanier\Api\exceptions\HttpNotAcceptableException;
 use Vanier\Api\exceptions\HttpBadRequest;
 use Vanier\Api\exceptions\HttpUnprocessableContent;
+use Vanier\Api\Validation\ValidateHelper;
 
 
 /**
@@ -35,6 +36,7 @@ class FilmsController
       define('DEFAULT_PAGE', 1);
       define("DEFAULT_PAGE_SIZE", 10);
 
+    
       // filter by title 
       $filters = $request->getQueryParams();
       
@@ -54,11 +56,18 @@ class FilmsController
       // if client didn't add a page and pageSize params, paginate using the default values
       $page = $filters["page"] ?? DEFAULT_PAGE;
       $pageSize = $filters["pageSize"] ?? DEFAULT_PAGE_SIZE;
-     
-      // check if the params is numeric, if not throw a bad request error
-      if (!is_numeric($page) || !is_numeric($pageSize))
+
+        // check if the params is numeric, if not throw a bad request error
+        if (!is_numeric($page) || !is_numeric($pageSize))
+        {
+           throw new HttpBadRequest($request, "expected numeric, but received alpha");
+        }
+
+      $dataParams = ['page' => $page, 'pageSize' => $pageSize, 'pageMin' => 1, 'pageSizeMin' => 5, 'pageSizeMax' => 10];
+
+      if (!ValidateHelper::validatePagingParams($dataParams))
       {
-         throw new HttpBadRequest($request);
+         throw new HttpUnprocessableContent($request, "Out of range, unable to process your request, please consult the manual"); 
       }
 
       $this->film_model->setPaginationOptions($page, $pageSize);
@@ -74,7 +83,7 @@ class FilmsController
       }
 
       if (!$data['data']){
-         throw new HttpUnprocessableContent($request, "Unable to process your request, please check you query parameter");
+         throw new HttpUnprocessableContent($request, "Unable to process your request, please check your query parameter or consult the documentation");
       }
       // json
       $json_data = json_encode($data);
