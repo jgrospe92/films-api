@@ -18,7 +18,7 @@ use Vanier\Api\Validation\ValidateHelper;
 
 /**
  * Summary of FilmsController
- * Support operations such as getAllFilms, 
+ * Support operations such as getAllFilms
  */
 class FilmsController
 {
@@ -127,7 +127,7 @@ class FilmsController
     * Summary of validateParams
     * @param mixed $param
     * @return bool
-    * return true if the given parameter is supported otherwise false 
+    * return true if the given parameter is supported otherwise false
     */
    function validateParams($param) : bool {
       $params = ['language', 'category', 'title', 'description', 'special_features', 'rating', 'sort_by', 'pageSize', 'page',];

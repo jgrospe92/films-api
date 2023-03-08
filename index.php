@@ -70,13 +70,14 @@ $app->get('/customers/{customer_id}/films',[CustomersController::class, 'handleG
 
 // Actor routing
 $app->get('/actors', [ActorsController::class, 'handleGetAllActors']);
+$app->get('/actors/{actor_id}/films', [ActorsController::class, 'handleFilmByActorsId']);
 
 
 // post - create a actor
 $app->post('/actors', [ActorsController::class, 'handleCreateActors']);
 
 
-// This is a middleware that should be disabled/enabled later. 
+//This is a middleware that should be disabled/enabled later.
 //$app->add($beforeMiddleware);
 // Run the app.
 $app->run();

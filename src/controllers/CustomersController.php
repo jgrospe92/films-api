@@ -173,7 +173,7 @@ class CustomersController
      * Summary of validateParams
      * @param mixed $param
      * @return bool
-     * return true if the given parameter is supported otherwise false 
+     * return true if the given parameter is supported otherwise false
      */
     function validateParams($param): bool
     {

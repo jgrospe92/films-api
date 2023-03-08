@@ -1,8 +1,6 @@
 <?php
 namespace Vanier\Api\models;
 use Psr\Http\Message\ServerRequestInterface as Request;
-
-use Vanier\Api\exceptions\HttpBadRequest;
 use Vanier\Api\Models\BaseModel;
 /**
  * Summary of FilmsModel
@@ -26,8 +24,6 @@ class FilmsModel extends BaseModel
     {
         // Queries the DB and return the list of all films
         $query_values = [];
-        // WHERE 1 allows us to concatenate any filtering command
-        //$sql = "SELECT * FROM $this->table_name WHERE 1 ";
 
         $sql = "SELECT film.*, actor.first_name, actor.last_name, category.name as category, language.name as language from film" .
             " inner join film_actor on film.film_id = film_actor.film_id inner join actor on actor.actor_id = film_actor.actor_id" .
@@ -78,19 +74,17 @@ class FilmsModel extends BaseModel
         {
             // Can only perform category
             $name = strtolower($filters['category']);
-            // $categories = $this->getCategory($name);
-            // return  $categories;
             $sql .= " AND category.name LIKE CONCAT(:name, '%')";
             $query_values["name"] =  $name;
         }
 
-        if (isset($filters['language'])){          
+        if (isset($filters['language'])){
             $name = ucfirst($filters['language']);
             $sql .= " AND language.name LIKE CONCAT(:lang, '%') ";
             $query_values["lang"] = $name;
         }
 
-        // if sort_by doesn't exists then append GROUP BY AT THE END 
+        // if sort_by doesn't exists then append GROUP BY AT THE END
         if (!isset($filters["sort_by"])){
             $sql .= " GROUP BY film.film_id ";
         }
@@ -99,41 +93,12 @@ class FilmsModel extends BaseModel
 
     }
 
-    /**
-     * Summary of getCategoryID
-     * @param mixed $name
-     * @return array
-     * Return film based on the category name
-     * depreciated 
-     */
-    private function getCategory($name)
-    {
-        $sql = "SELECT * from film inner join film_category on film.film_id = film_category.film_id " .
-        "INNER join category on film_category.category_id = category.category_id where category.name =:name ";
-        //$STMT = $this->getPdo()->prepare($sql);
-        //$STMT->execute(['name'=>$name]);
-        return $this->paginate($sql, ['name'=>$name]);
-        //return $STMT->fetchAll();
-    }
-
-   
-    /**
-     * Summary of getLanguage
-     * @param mixed $language
-     * @return array
-     * fetch film(s) based on the language given
-     */
-    private function getLanguage($language){
-        $lang = ucfirst($language);
-        $sql = "SELECT * from film inner join language WHERE language.name =:name";
-        return $this->paginate($sql, ['name'=>$lang]);
-    }
 
     /**
      * Summary of getFilmById
      * @param mixed $film_id
      * @return mixed
-     * return film by id 
+     * return film by id
      */
     public function getFilmById($film_id)
     {
