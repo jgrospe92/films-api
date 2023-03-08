@@ -51,10 +51,9 @@ class FilmsModel extends BaseModel
 
         if (isset($filters['special_features']))
         {
-            $sql .= " AND special_features LIKE CONCAT('%',:special_features ,'%') ";
+            $sql .= " AND special_features LIKE CONCAT(:special_features ,'%') ";
             $query_values[":special_features"] = $filters["special_features"];
         }
-
 
         if (isset($filters["description"]))
         {

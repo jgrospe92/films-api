@@ -126,7 +126,7 @@ class FilmsController
     * return true if the given parameter is supported otherwise false 
     */
    function validateParams($param) : bool {
-      $params = ['language', 'category', 'title', 'description', 'special_features', 'rating', 'sort_by', 'pageSize', 'page', 'special_features',];
+      $params = ['language', 'category', 'title', 'description', 'special_features', 'rating', 'sort_by', 'pageSize', 'page',];
 
       if (in_array($param, $params)){
          return true;

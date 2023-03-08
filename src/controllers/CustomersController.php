@@ -164,7 +164,7 @@ class CustomersController
      */
     function validateParams($param): bool
     {
-        $params = ['first_name', 'last_name', 'city', 'country', 'page', 'pageSize', 'sort_by'];
+        $params = ['first_name', 'last_name', 'city', 'country', 'page', 'pageSize', 'sort_by', 'rating', 'special_features'];
 
         if (in_array($param, $params)) {
             return true;

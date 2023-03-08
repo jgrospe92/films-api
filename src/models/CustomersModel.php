@@ -86,6 +86,17 @@ class CustomersModel extends BaseModel
         $sql .= " AND customer.customer_id LIKE :id ";
         $query_values['id'] = $customer_id;
 
+        if (isset($filters["rating"]))
+        {
+            $sql .= " AND rating =:rating ";
+            $query_values[":rating"] = $filters["rating"];
+        }
+
+        if (isset($filters['special_features']))
+        {
+            $sql .= " AND special_features LIKE CONCAT(:special_features ,'%') ";
+            $query_values[":special_features"] = $filters["special_features"];
+        }
     
 
         $sql .= " GROUP BY film.film_id ";
