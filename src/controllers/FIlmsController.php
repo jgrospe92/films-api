@@ -13,6 +13,7 @@ use Vanier\Api\exceptions\HttpNotAcceptableException;
 use Vanier\Api\exceptions\HttpBadRequest;
 use Vanier\Api\exceptions\HttpUnprocessableContent;
 use Vanier\Api\exceptions\HttpNotFound;
+use Vanier\Api\exceptions\HttpConflict;
 use Vanier\Api\Validation\ValidateHelper;
 
 
@@ -30,6 +31,37 @@ class FilmsController
    {
       $this->film_model = new FilmsModel();
    }
+
+   public function handleCreateFilms(Request $request, Response $response, array $uri_args)
+   {
+      // 1. ) to retrieve the data from the request
+      $data = $request->getParsedBody();
+      // 2. ) validate
+      // check if the body is empty
+      if (!isset($data)) {
+         throw new HttpConflict($request);
+      }
+      // validate the body
+      foreach ($data as $film) {
+         if (!ValidateHelper::validatePostFilm($film)) {
+            throw new HttpConflict($request);
+         } else {
+            // TODO create a mode function to create
+            $this->film_model->createFilms($film);
+          
+         }
+      }
+
+      // return with the right status code
+      // json
+      $json_data = json_encode($data);
+      // return the response;
+      $response->getBody()->write($json_data);
+
+      return $response->withStatus(StatusCodeInterface::STATUS_CREATED)->withHeader("Content-type", "application/json");
+   }
+
+
    // Callback - need to return response
    public function handleGetAllFilms(Request $request, Response $response)
    {

@@ -14,6 +14,12 @@ class FilmsModel extends BaseModel
         parent::__construct();
     }
 
+
+    public function createFilms(array $film)
+    {
+        return $this->insert("film", $film);
+    }
+
     /**
      * Summary of getAll
      * @param array $filters
@@ -105,15 +111,6 @@ class FilmsModel extends BaseModel
              $sql = "SELECT * FROM $this->table_name WHERE film_id=:film_id";
              return  $this->run($sql, ["film_id"=>$film_id])->fetchAll();
     }
-
-    /*
-    Reference : Run this on myPhpAdmin
-    SELECT film.*, actor.first_name, actor.last_name, language.name as Lang from film 
-    inner join film_actor on film.film_id = film_actor.film_id inner join actor on actor.actor_id = film_actor.actor_id 
-    inner join film_category on film.film_id = film_category.film_id inner join category on film_category.category_id = category.category_id 
-    inner JOIN language on language.language_id = film.language_id WHERE language.name = 'English' GROUP BY film.film_id;
-    */
-
  
 }
 

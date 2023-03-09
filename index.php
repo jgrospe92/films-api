@@ -73,8 +73,11 @@ $app->get('/actors', [ActorsController::class, 'handleGetAllActors']);
 $app->get('/actors/{actor_id}/films', [ActorsController::class, 'handleFilmByActorsId']);
 
 
-// post - create a actor
+// post - create actors
 $app->post('/actors', [ActorsController::class, 'handleCreateActors']);
+
+// post - create films
+$app->post('/films',[FilmsController::class,'handleCreateFilms']);
 
 
 //This is a middleware that should be disabled/enabled later.

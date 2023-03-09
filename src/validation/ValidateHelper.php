@@ -189,4 +189,59 @@ class ValidateHelper
             return false;
         }
     }
+
+    public static function validatePostFilm(array $data)
+    {
+        $title = $data['title'] ?? '';
+        $description = $data['description'] ?? '';
+        $release_year = $data['release_year'] ?? '';
+        $language_id = $data['language_id'] ?? '';
+        $original_language_id = $data['original_language_id'] ?? '';
+        $rental_duration = $data['rental_duration'] ?? '';
+        $rental_rate = $data['rental_rate'] ?? '';
+        $length = $data['length'] ?? '';
+        $replacement_cost = $data['replacement_cost'] ?? '';
+        $rating = $data['rating'] ?? '';
+        $special_features = $data['special_features'] ?? '';
+
+
+        $data = array(
+            "title" => $title,
+            "description" => $description,
+            "release_year" => $release_year,
+            "language_id" => $language_id,
+            "original_language_id" => $original_language_id,
+            "rental_duration" => $rental_duration,
+            "rental_rate" => $rental_rate,
+            "length" => $length,
+            "replacement_cost" => $replacement_cost,
+            "rating" => $rating,
+            "special_features" => $special_features,
+        );
+
+        $rules = [
+            'numeric' => [
+                'release_year','language_id', 'original_language_id', 'rental_duration', 
+            ],
+            // We can apply the same rule to multiple elements.
+            'required' => [
+                'fist_name', 'last_name'
+            ],
+            // Validate the max length of list of elements.
+            'lengthMax' => array(
+                array('fist_name', 20),
+                array('last_name', 20)
+            )
+        ];
+        // Change the default language to French.
+        //$validator = new Validator($data, [], "fr");
+        $validator = new Validator($data);
+        $validator->rules($rules);
+
+        if ($validator->validate()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
