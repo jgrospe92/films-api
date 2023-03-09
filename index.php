@@ -7,9 +7,9 @@ use Slim\Factory\AppFactory;
 use Vanier\Api\controllers\ActorsController;
 use Vanier\Api\controllers\FilmsController;
 use Vanier\Api\controllers\CustomersController;
+use Vanier\Api\controllers\CategoriesController;
 use Vanier\Api\middleware\ContentNegotiationMiddleware;
-use Vanier\Api\models\ActorsModel;
-use Vanier\Api\models\FilmsModel;
+
 
 require __DIR__ . '/vendor/autoload.php';
  // Include the file that contains the application's global configuration settings,
@@ -72,6 +72,8 @@ $app->get('/customers/{customer_id}/films',[CustomersController::class, 'handleG
 $app->get('/actors', [ActorsController::class, 'handleGetAllActors']);
 $app->get('/actors/{actor_id}/films', [ActorsController::class, 'handleFilmByActorsId']);
 
+// categories
+$app->get('/categories/{category_id}/films', [CategoriesController::class, 'handleGetAllFilmsByCategory']);
 
 // post - create actors
 $app->post('/actors', [ActorsController::class, 'handleCreateActors']);

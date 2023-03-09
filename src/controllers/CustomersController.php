@@ -97,7 +97,6 @@ class CustomersController
     public function handleGetFilmByCustomerId(Request $request, Response $response, array $uri_args)
     {
 
-
         $customer_id = $uri_args['customer_id'];
 
         $dataParams = ['id' => $customer_id, 'min' => 1, 'max' => 1000];
@@ -155,12 +154,6 @@ class CustomersController
         } catch (Exception $e) {
             throw new HttpBadRequest($request, "Invalid request Syntax, please refer to the manual");
         }
-
-        // if the returned data is empty
-        if (!$data['data']) {
-            throw new HttpNotFound($request);
-        }
-        // 
 
         // process the data and return the response as json format
         $json_data = json_encode($data);

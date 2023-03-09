@@ -11,6 +11,11 @@ class CustomersModel extends BaseModel
         parent::__construct();
     }
 
+    private function get(int $id){
+        $sql = "SELECT * FROM customer WHERE customer_id =:customer_id";
+        return $this->run($sql, ['customer_id'=>$id])->fetch();
+    }
+
     public function getAllCustomers(array $filters = [], Request $request)
     {
         // Queries the DB and return the list of all films
@@ -65,9 +70,7 @@ class CustomersModel extends BaseModel
         }
         return $this->paginate($sql, $query_values);
 
-    }
-
-
+    }   
     /**
      * Summary of getFilmById
      * @param mixed $customer_id
@@ -78,6 +81,7 @@ class CustomersModel extends BaseModel
     {
         // Queries the DB and return the list of all films
         $query_values = [];
+        $customer = $this->get($customer_id);
         
         $sql = "SELECT film.*, category.name, rental.rental_date from customer INNER JOIN rental on customer.customer_id = rental.customer_id" .
         " INNER JOIN inventory on inventory.inventory_id = rental.inventory_id" .
@@ -85,7 +89,7 @@ class CustomersModel extends BaseModel
         " INNER JOIN film_category on film_category.film_id = film.film_id INNER JOIN category on film_category.category_id = category.category_id" .
         " WHERE 1";
 
-        $sql .= " AND customer.customer_id LIKE :id ";
+        $sql .= " AND customer.customer_id =:id ";
         $query_values['id'] = $customer_id;
 
         if (isset($filters["rating"]))
@@ -135,10 +139,13 @@ class CustomersModel extends BaseModel
         if (!isset($filters["sort_by"])){
             $sql .= " GROUP BY film.film_id ";
         }
-        return  $this->paginate($sql, $query_values);
+        $films =  $this->paginate($sql, $query_values);
+        return   array("customer"=>$customer, "films"=>$films);
  
 
     }
+
+
 
 }
 

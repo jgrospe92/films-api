@@ -1,10 +1,11 @@
 <?php
 
 namespace Vanier\Api\models;
-
-use Psr\Http\Message\ServerRequestInterface as Request;
 use Vanier\Api\Models\BaseModel;
 
+/**
+ * Summary of ActorsModel
+ */
 class ActorsModel extends BaseModel
 {
     public function __construct()
@@ -12,6 +13,11 @@ class ActorsModel extends BaseModel
         parent::__construct();
     }
 
+    /**
+     * Summary of get
+     * @param int $id
+     * @return mixed
+     */
     private function get(int $id){
         $sql = "SELECT * FROM actor WHERE actor_id =:id";
         return $this->run($sql, ['id'=>$id])->fetch();
@@ -48,21 +54,30 @@ class ActorsModel extends BaseModel
         return $this->paginate($sql, $query_values);
     }
 
+    /**
+     * Summary of getActorById
+     * @param int $id
+     * @return void
+     */
     public function getActorById(int $id)
     {
         $sql = "SELECT * FROM actor WHERE actor_id =: id";
         
     }
 
+    /**
+     * Summary of getFilmByActorId
+     * @param mixed $actor_id
+     * @param array $filters
+     * @return array
+     */
     public function getFilmByActorId($actor_id, array $filters)
     {
         // Queries the DB and return the list of all films
 
         $actor = $this->get($actor_id);
-        $actor_data = json_encode($actor);
-
         $query_values = [];
-        $sql = "SELECt film.* from film INNER JOIN film_actor on film_actor.film_id = film.film_id" .
+        $sql = "SELECt film.*, category.name as category from film INNER JOIN film_actor on film_actor.film_id = film.film_id" .
             " INNER JOIN actor ON actor.actor_id = film_actor.actor_id" .
             " INNER JOIN film_category ON film_category.film_id = film.film_id" .
             " INNER JOIN category ON category.category_id = film_category.category_id";
@@ -103,7 +118,7 @@ class ActorsModel extends BaseModel
         if (!isset($filters["sort_by"])) {
             $sql .= " GROUP BY film.film_id ";
         }
-       
+
         $films =  $this->paginate($sql, $query_values);
         return   array("actor"=>$actor, "films"=>$films);
     }
