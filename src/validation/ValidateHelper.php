@@ -139,23 +139,21 @@ class ValidateHelper
             echo $validator->errorsToJson();
         }
     }
-    function testSingleValue()
+    public static function validateNumericInput(array $data)
     {
         // Validate a single value.
         // The value must be passed as an array. 
-        $value = '33r';
-        $validator = new Validator(['age' => $value]);
-        $validator->rule('integer', 'age');
+        $value = $data['length'];
+        
+        $validator = new Validator(['length' => $value]);
+        $validator->rule('min','length',1);
         if ($validator->validate()) {
-            echo "<br> Valid data!";
+            return true;
         } else {
-            //var_dump($validator->errors());
-            //print_r($validator->errors());
-            echo $validator->errorsToString();
-            echo '<br>';
-            echo $validator->errorsToJson();
+           return false;
         }
     }
+
     function testValidateArray()
     {
         $data = array(

@@ -122,6 +122,21 @@ class ActorsController
             }
          }
       }
+      if (isset($filters['film_length'])){
+         
+         if ($filters['film_length']){
+            $isValidNum = ValidateHelper::validateNumericInput(array("length"=>$filters['film_length']));
+            if (!$isValidNum)
+            {
+               $msg = is_numeric($filters['film_length']) ? "The provided length is out of range" : "Invalid input: expecting a number ";
+               throw new HttpUnprocessableContent($request, $msg);
+            }
+         } else {
+            throw new HttpUnprocessableContent($request, "Please provide query value for : {film_length}");
+         }
+        
+      }
+
       // verify if client added a page and pageSize params
       // if client didn't add a page and pageSize params, paginate using the default values
       $page = $filters["page"] ?? self::DEFAULT_PAGE;

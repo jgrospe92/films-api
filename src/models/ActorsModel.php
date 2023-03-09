@@ -70,6 +70,11 @@ class ActorsModel extends BaseModel
             $sql .= " AND rating LIKE CONCAT(:rating, '%')";
             $query_values[":rating"] = $filters["rating"];
         }
+        if (isset($filters['film_length']))
+        {
+            $sql .= " AND length >= :film_length";
+            $query_values[":film_length"] = $filters["film_length"];
+        }
 
         if (isset($filters['sort_by'])) {
             $sql .= " GROUP BY film.film_id ";
