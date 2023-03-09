@@ -153,7 +153,6 @@ class CustomersController
         try {
             $data = $this->customer_model->getFilmById($customer_id, $filters);
         } catch (Exception $e) {
-            echo $e;
             throw new HttpBadRequest($request, "Invalid request Syntax, please refer to the manual");
         }
 

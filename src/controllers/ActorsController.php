@@ -143,7 +143,6 @@ class ActorsController
       try {
          $data = $this->actor_model->getFilmByActorId($actor_id, $filters);
       } catch (Exception $e) {
-         echo $e;
          throw new HttpBadRequest($request, "Invalid request Syntax, please refer to the manual");
       }
 

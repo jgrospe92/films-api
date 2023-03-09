@@ -90,7 +90,7 @@ class CustomersModel extends BaseModel
 
         if (isset($filters["rating"]))
         {
-            $sql .= " AND rating =:rating ";
+            $sql .= " AND rating LIKE CONCAT(:rating, '%')";
             $query_values[":rating"] = $filters["rating"];
         }
 
@@ -115,8 +115,26 @@ class CustomersModel extends BaseModel
             $query_values['from_rentalDate'] = $filters['from_rentalDate'];
             $query_values['to_rentalDate'] = $filters['to_rentalDate'];
         }
-    
-        $sql .= " GROUP BY film.film_id ";
+
+        if (isset($filters['sort_by']))
+        {
+            $sql .= " GROUP BY film.film_id ";
+
+            if (!empty($filters['sort_by']))
+            {
+                $keyword = explode(".", $filters['sort_by']);
+                $column = $keyword[0] ?? "";
+                $order_by = $keyword[1] ?? "";
+
+                $sql .= " ORDER BY " .   $column . " " .  $order_by;
+
+            }
+        }
+        
+          // if sort_by doesn't exists then append GROUP BY AT THE END 
+        if (!isset($filters["sort_by"])){
+            $sql .= " GROUP BY film.film_id ";
+        }
         return  $this->paginate($sql, $query_values);
  
 
