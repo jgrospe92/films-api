@@ -13,9 +13,13 @@ use Vanier\Api\exceptions\HttpNotAcceptableException;
 use Vanier\Api\exceptions\HttpBadRequest;
 use Vanier\Api\exceptions\HttpUnprocessableContent;
 use Vanier\Api\exceptions\HttpNotFound;
+use Vanier\Api\exceptions\HttpConflict;
 use Vanier\Api\Validation\ValidateHelper;
 
 
+/**
+ * Summary of ActorsController
+ */
 class ActorsController
 {
    private $actor_model = null;
@@ -29,28 +33,54 @@ class ActorsController
       $this->actor_model = new ActorsModel();
    }
 
+   /**
+    * Summary of handleCreateActors
+    * @param Request $request
+    * @param Response $response
+    * @param array $uri_args
+    * @throws HttpConflict
+    * @return Response
+    */
    public function handleCreateActors(Request $request, Response $response, array $uri_args)
    {
       // 1. ) to retrieve the data from the request
+      $data = $request->getParsedBody();
+
 
       // 2. ) validate
       // check if the body is empty
-      // is_array, see if it's an array
-      //check if the data is structured correctly
-
-      // if all above condition is correct then you can proceed on handling the request
-
-      // 3. ) Insert the new data into the db
-      // validate actors
-
-      // use foreach() to get all the individual data
-      // 4. ) pass the actor element/item to the model
-      // call the actors model function to create the actor
+      if (!isset($data)) {
+         throw new HttpConflict($request);
+      }
+      // validate the body
+      foreach ($data as $actor) {
+         if (!ValidateHelper::validatePostActor($actor)) {
+            throw new HttpConflict($request);
+         } else {
+            // TODO create a mode function to create
+            $this->actor_model->createActors($actor);
+          
+         }
+      }
 
       // return with the right status code
-      return $response;
+      // json
+      $json_data = json_encode($data);
+      // return the response;
+      $response->getBody()->write($json_data);
+
+      return $response->withStatus(StatusCodeInterface::STATUS_CREATED)->withHeader("Content-type", "application/json");
    }
 
+   /**
+    * Summary of handleGetAllActors
+    * @param Request $request
+    * @param Response $response
+    * @throws HttpUnprocessableContent
+    * @throws HttpBadRequest
+    * @throws HttpNotFound
+    * @return Response
+    */
    public function handleGetAllActors(Request $request, Response $response)
    {
 
@@ -102,6 +132,16 @@ class ActorsController
       return $response->withStatus(StatusCodeInterface::STATUS_OK)->withHeader("Content-type", "application/json");
    }
 
+   /**
+    * Summary of handleFilmByActorsId
+    * @param Request $request
+    * @param Response $response
+    * @param array $uri_args
+    * @throws HttpUnprocessableContent
+    * @throws HttpBadRequest
+    * @throws HttpNotFound
+    * @return Response
+    */
    public function handleFilmByActorsId(Request $request, Response $response, array $uri_args)
    {
       $actor_id = $uri_args['actor_id'];
@@ -122,19 +162,17 @@ class ActorsController
             }
          }
       }
-      if (isset($filters['film_length'])){
-         
-         if ($filters['film_length']){
-            $isValidNum = ValidateHelper::validateNumericInput(array("length"=>$filters['film_length']));
-            if (!$isValidNum)
-            {
+      if (isset($filters['film_length'])) {
+
+         if ($filters['film_length']) {
+            $isValidNum = ValidateHelper::validateNumericInput(array("length" => $filters['film_length']));
+            if (!$isValidNum) {
                $msg = is_numeric($filters['film_length']) ? "The provided length is out of range" : "Invalid input: expecting a number ";
                throw new HttpUnprocessableContent($request, $msg);
             }
          } else {
             throw new HttpUnprocessableContent($request, "Please provide query value for : {film_length}");
          }
-        
       }
 
       // verify if client added a page and pageSize params

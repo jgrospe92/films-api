@@ -15,6 +15,7 @@ use Vanier\Api\exceptions\HttpNotAcceptableException;
 use Vanier\Api\exceptions\HttpBadRequest;
 use Vanier\Api\exceptions\HttpUnprocessableContent;
 use Vanier\Api\exceptions\HttpNotFound;
+use Vanier\Api\exceptions\HttpConflict;
 use Exception;
 use Throwable;
 
@@ -29,6 +30,7 @@ class HttpErrorHandler extends ErrorHandler
     public const UNAUTHENTICATED = 'UNAUTHENTICATED';
     public const NOT_ACCEPTABLE = "NOT_ACCEPTABLE";
     public const UNPROCESSABLE_CONTENT = "UNPROCESSABLE_CONTENT";
+    public const CONFLICT = "CONFLICT";
     
     protected function respond(): ResponseInterface
     {
@@ -60,6 +62,8 @@ class HttpErrorHandler extends ErrorHandler
                 $type = self::NOT_ACCEPTABLE;
             }elseif ($exception instanceof HttpUnprocessableContent){
                 $type = self::UNPROCESSABLE_CONTENT;
+            }elseif($exception instanceof HttpConflict){
+                $type = self::CONFLICT;
             }
         }
 

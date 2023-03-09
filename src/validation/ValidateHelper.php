@@ -154,35 +154,29 @@ class ValidateHelper
         }
     }
 
-    function testValidateArray()
+    public static function validatePostActor(array $data)
     {
+        $first_name = $data['first_name'] ?? '';
+        $last_name = $data['last_name'] ?? '';
+
         $data = array(
-            "fist_name" => "Ladybug",
-            "last_name" => "Bumblebee",
-            "age" =>  17,
-            "price" =>  '389.53',
-            "oi" =>  '5',
+            "fist_name" => $first_name,
+            "last_name" => $last_name
         );
 
         $rules = [
-            'integer' => [
-                'age'
+            'alpha' => [
+                'fist_name','last_name'
             ],
             // We can apply the same rule to multiple elements.
             'required' => [
-                'fist_name', 'last_name', 'age', 'price'
+                'fist_name', 'last_name'
             ],
             // Validate the max length of list of elements.
             'lengthMax' => array(
-                array('fist_name', 5),
-                array('last_name', 5)
-            ),
-            'numeric' => [
-                'price'
-            ],
-            'min' => [
-                ['oi', 14]
-            ]
+                array('fist_name', 20),
+                array('last_name', 20)
+            )
         ];
         // Change the default language to French.
         //$validator = new Validator($data, [], "fr");
@@ -190,11 +184,9 @@ class ValidateHelper
         $validator->rules($rules);
 
         if ($validator->validate()) {
-            echo "Valid data!";
+            return true;
         } else {
-            //var_dump($validator->errors());
-            //echo implode('|', $validator->errors());
-            print_r($validator->errors());
+            return false;
         }
     }
 }
