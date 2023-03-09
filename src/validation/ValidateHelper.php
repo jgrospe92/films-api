@@ -220,18 +220,22 @@ class ValidateHelper
         );
 
         $rules = [
-            'numeric' => [
-                'release_year','language_id', 'original_language_id', 'rental_duration', 
-            ],
             // We can apply the same rule to multiple elements.
             'required' => [
-                'fist_name', 'last_name'
+                'title', 'language_id', 'rental_duration', 'rental_rate', 'replacement_cost'
             ],
-            // Validate the max length of list of elements.
-            'lengthMax' => array(
-                array('fist_name', 20),
-                array('last_name', 20)
-            )
+            'min' => 
+            [
+                ['release_year', 2006],
+                ['language_id', 1],
+                ['original_language_id', 1],
+                ['rental_duration', 1],
+                ['rental_rate', 0],
+                ['length', 1],
+                ['replacement_cost', 0]
+            ],
+            'in' => ['rating', ['G','PG','PG-13','R','NC-17']]
+            
         ];
         // Change the default language to French.
         //$validator = new Validator($data, [], "fr");

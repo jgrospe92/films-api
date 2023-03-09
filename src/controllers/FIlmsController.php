@@ -47,7 +47,7 @@ class FilmsController
             throw new HttpConflict($request);
          } else {
             // TODO create a mode function to create
-            $this->film_model->createFilms($film);
+            //$this->film_model->createFilms($film);
           
          }
       }
