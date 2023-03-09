@@ -50,43 +50,43 @@ class ValidateHelper
         }
     }
 
-    
-   /**
-    * Summary of validateInputId
-    * @param mixed $id
-    * @return mixed
-    */
-   public static function validateInputId(array $dataParams)
-   {
-      return filter_var($dataParams['id'], FILTER_VALIDATE_INT, ['options'=> ['min_range' =>$dataParams['min'], 'max_range'=>$dataParams['max']]]);
-   }
 
-
-
-   /**
-    * Summary of validateDateInput
-    * @param mixed $date
-    * @return bool 
-    * Validate date input
-    */
-   public static function validateDateInput(array $date){
-
-    $data = array('from_rentalDate'=> $date['from_rentalDate'], 'to_rentalDate'=>$date['to_rentalDate']);
-
-    $rules = array(
-                    'from_rentalDate' => [['dateFormat', 'Y-m-d']],
-                    'to_rentalDate' => [['dateFormat', 'Y-m-d']]
-                    );
-    $validator = new Validator($data, [], 'en');
-     // Important: map the validation rules before calling validate()
-    $validator->mapFieldsRules($rules);
-    if ($validator->validate()) {
-        return true;
-    } else {
-        return false;
+    /**
+     * Summary of validateInputId
+     * @param mixed $id
+     * @return mixed
+     */
+    public static function validateInputId(array $dataParams)
+    {
+        return filter_var($dataParams['id'], FILTER_VALIDATE_INT, ['options' => ['min_range' => $dataParams['min'], 'max_range' => $dataParams['max']]]);
     }
 
-   }
+
+
+    /**
+     * Summary of validateDateInput
+     * @param mixed $date
+     * @return bool 
+     * Validate date input
+     */
+    public static function validateDateInput(array $date)
+    {
+
+        $data = array('from_rentalDate' => $date['from_rentalDate'], 'to_rentalDate' => $date['to_rentalDate']);
+
+        $rules = array(
+            'from_rentalDate' => [['dateFormat', 'Y-m-d']],
+            'to_rentalDate' => [['dateFormat', 'Y-m-d']]
+        );
+        $validator = new Validator($data, [], 'en');
+        // Important: map the validation rules before calling validate()
+        $validator->mapFieldsRules($rules);
+        if ($validator->validate()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     function testValidatePersonInfo()
     {
@@ -144,13 +144,13 @@ class ValidateHelper
         // Validate a single value.
         // The value must be passed as an array. 
         $value = $data['length'];
-        
+
         $validator = new Validator(['length' => $value]);
-        $validator->rule('min','length',1);
+        $validator->rule('min', 'length', 1);
         if ($validator->validate()) {
             return true;
         } else {
-           return false;
+            return false;
         }
     }
 
@@ -166,7 +166,7 @@ class ValidateHelper
 
         $rules = [
             'alpha' => [
-                'fist_name','last_name'
+                'fist_name', 'last_name'
             ],
             // We can apply the same rule to multiple elements.
             'required' => [
@@ -190,6 +190,38 @@ class ValidateHelper
         }
     }
 
+    public static function testIn()
+    {
+
+        $data = array(
+            "title" => "Web",
+            "description" => "desc",
+            "release_year" => 2006,
+            "language_id" => 1,
+            "original_language_id" => 1,
+            "rental_duration" => 2,
+            "rental_rate" => 0.99,
+            "length" => 2,
+            "replacement_cost" => 50.99,
+            "rating" => "",
+            "special_features" => "Deleted Scenes",
+        );
+
+        $validator = new Validator($data);
+
+        $validator->rules([
+            'in' => [
+                ['rating', ['G', 'PG', 'PG-13', 'R', 'NC-17']]
+            ]
+        ]);
+
+        if ($validator->validate()) {
+            echo "valid";
+        } else {
+            echo "not valid";
+        }
+    }
+
     public static function validatePostFilm(array $data)
     {
         $title = $data['title'] ?? '';
@@ -201,11 +233,11 @@ class ValidateHelper
         $rental_rate = $data['rental_rate'] ?? '';
         $length = $data['length'] ?? '';
         $replacement_cost = $data['replacement_cost'] ?? '';
-        $rating = $data['rating'] ?? '';
+        $rating = $data['rating'] ?? 'G';
         $special_features = $data['special_features'] ?? '';
 
 
-        $data = array(
+        $film_object = array(
             "title" => $title,
             "description" => $description,
             "release_year" => $release_year,
@@ -224,7 +256,7 @@ class ValidateHelper
             'required' => [
                 'title', 'language_id', 'rental_duration', 'rental_rate', 'replacement_cost'
             ],
-            'min' => 
+            'min' =>
             [
                 ['release_year', 2006],
                 ['language_id', 1],
@@ -234,18 +266,19 @@ class ValidateHelper
                 ['length', 1],
                 ['replacement_cost', 0]
             ],
-            'in' => ['rating', ['G','PG','PG-13','R','NC-17']]
-            
+            'in' => ['rating', ['G', 'PG', 'PG-13', 'R', 'NC-17']],
+
         ];
         // Change the default language to French.
         //$validator = new Validator($data, [], "fr");
-        $validator = new Validator($data);
+        $validator = new Validator($film_object);
         $validator->rules($rules);
 
         if ($validator->validate()) {
             return true;
         } else {
             return false;
+
         }
     }
 }

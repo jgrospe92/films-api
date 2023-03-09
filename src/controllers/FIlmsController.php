@@ -36,6 +36,9 @@ class FilmsController
    {
       // 1. ) to retrieve the data from the request
       $data = $request->getParsedBody();
+
+      ValidateHelper::testIn(); exit;
+      
       // 2. ) validate
       // check if the body is empty
       if (!isset($data)) {

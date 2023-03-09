@@ -200,9 +200,9 @@ class ActorsController
       }
 
       // if the returned data is empty
-      if (!$data['data']) {
-         throw new HttpNotFound($request);
-      }
+      // if (!$data) {
+      //    throw new HttpNotFound($request);
+      // }
 
       // process the data and return the response as json format
       $json_data = json_encode($data);
