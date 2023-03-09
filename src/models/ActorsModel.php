@@ -45,6 +45,34 @@ class ActorsModel extends BaseModel
         return $this->paginate($sql, $query_values);
     }
 
+    public function getFilmByActorId($actor_id, array $filters)
+    {
+         // Queries the DB and return the list of all films
+         $query_values = [];
+         $sql = "SELECt film.*, category.name as category from film INNER JOIN film_actor on film_actor.film_id = film.film_id" .
+                " INNER JOIN actor ON actor.actor_id = film_actor.actor_id" .
+                " INNER JOIN film_category ON film_category.film_id = film.film_id".
+                " INNER JOIN category ON category.category_id = film_category.category_id";
+
+        $sql .= " AND actor.actor_id =:id";
+        $query_values['id'] = $actor_id;
+
+        if (isset($filters['category']))
+        {
+            // Can only perform category
+            $name = strtolower($filters['category']);
+            // $categories = $this->getCategory($name);
+            // return  $categories;
+            $sql .= " AND category.name LIKE CONCAT(:name, '%')";
+            $query_values["name"] =  $name;
+        }
+
+        $sql .= " GROUP BY film.film_id ";
+
+        return  $this->paginate($sql, $query_values);
+    }
+
+
     /**
      * createActors
      *
