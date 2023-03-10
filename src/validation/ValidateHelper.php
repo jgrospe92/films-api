@@ -204,8 +204,10 @@ class ValidateHelper
             "length" => 2,
             "replacement_cost" => 50.99,
             "rating" => "G",
-            "special_features" => "Deleted Scenes",
+            "special_features" => array_map('ucwords',['Commentaries','deleted scenes']),
         );
+
+        var_dump($data['special_features']);
 
         $validator = new Validator($data);
 
@@ -214,6 +216,7 @@ class ValidateHelper
                 'in' => [
                     ['rating', ['G', 'PG', 'PG-13', 'R', 'NC-17']]
                 ],
+                'subset' => [['special_features', ['Trailers','Commentaries','Deleted Scenes','Behind The Scenes']]],
                 'required' => [
                     'title', 'language_id', 'rental_duration', 'rental_rate', 'replacement_cost'
                 ],
@@ -263,7 +266,7 @@ class ValidateHelper
             "length" => $length,
             "replacement_cost" => $replacement_cost,
             "rating" => $rating,
-            "special_features" => $special_features,
+            "special_features" => array_map('ucwords',$special_features),
         );
 
         $rules =
@@ -271,6 +274,7 @@ class ValidateHelper
                 'in' => [
                     ['rating', ['G', 'PG', 'PG-13', 'R', 'NC-17']]
                 ],
+                'subset' => [['special_features', ['Trailers','Commentaries','Deleted Scenes','Behind The Scenes']]],
                 'required' => [
                     'title', 'language_id', 'rental_duration', 'rental_rate', 'replacement_cost'
                 ],
@@ -283,6 +287,10 @@ class ValidateHelper
                     ['rental_rate', 0],
                     ['length', 1],
                     ['replacement_cost', 0]
+                ],
+                'max' =>
+                [
+                    ['release_year', date("Y")]
                 ]
             ];
         // Change the default language to French.

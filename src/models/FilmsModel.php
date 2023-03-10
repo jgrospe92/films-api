@@ -77,7 +77,6 @@ class FilmsModel extends BaseModel
                 $sql .= " ORDER BY " .   $column . " " .  $order_by;
             }
         }
-
         if (isset($filters['category']))
         {
             // Can only perform category

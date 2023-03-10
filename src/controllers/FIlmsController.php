@@ -36,7 +36,6 @@ class FilmsController
    {
       // 1. ) to retrieve the data from the request
       $data = $request->getParsedBody();
-  
 
       //ValidateHelper::testIn(); exit;
       
@@ -50,7 +49,12 @@ class FilmsController
          if (!ValidateHelper::validatePostFilm($film)) {
             throw new HttpConflict($request);
          } else {
-            $this->film_model->createFilm($film);
+            if (isset($film['special_features'])){
+               $sf = array_map('ucwords',$film['special_features']);
+               $special_features = implode(',',$sf);
+               $film['special_features'] = $special_features;
+            }
+            //$this->film_model->createFilm($film);
          }
       }
 
@@ -59,7 +63,6 @@ class FilmsController
       $json_data = json_encode($data);
       // return the response;
       $response->getBody()->write($json_data);
-
       return $response->withStatus(StatusCodeInterface::STATUS_CREATED)->withHeader("Content-type", "application/json");
    }
 
