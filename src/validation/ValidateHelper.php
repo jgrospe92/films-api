@@ -61,8 +61,6 @@ class ValidateHelper
         return filter_var($dataParams['id'], FILTER_VALIDATE_INT, ['options' => ['min_range' => $dataParams['min'], 'max_range' => $dataParams['max']]]);
     }
 
-
-
     /**
      * Summary of validateDateInput
      * @param mixed $date
@@ -139,6 +137,13 @@ class ValidateHelper
             echo $validator->errorsToJson();
         }
     }
+
+
+    /**
+     * Summary of validateNumericInput
+     * @param array $data
+     * @return bool
+     */
     public static function validateNumericInput(array $data)
     {
         // Validate a single value.
@@ -152,6 +157,78 @@ class ValidateHelper
         } else {
             return false;
         }
+    }
+
+    public static function validatePutCustomer()
+    {
+        // $customer_id = $data['customer_id'] ?? '';
+        // $store_id = $data['store_id'] ?? '';
+        // $first_name = $data['first_name'] ?? '';
+        // $last_name = $data['last_name'] ?? '';
+        // $email = $data['email'] ?? '';
+        // $address_id = $data['address_id'] ?? '';
+        // $active = $data['active'] ?? '';
+        // $create_date  = $data['create_date'] ?? '';
+
+        $data = array(
+            'customer_id' =>1,
+            'store_id' => 2,
+            'first_name' => "jeffrey",
+            'last_name' => "Grisoe",
+            'email' => "jeffrey@gmail.com",
+            'address_id' => 1,
+            'active' => 0,
+            'create_date' => date('Y-m-d H:i:s')
+        );
+
+
+        // $customer_object = array(
+        //     'customer_id' =>$customer_id,
+        //     'store_id' => $store_id,
+        //     'first_name' => $first_name,
+        //     'last_name' => $last_name,
+        //     'email' => $email,
+        //     'address_id' => $address_id,
+        //     'active' => $active,
+        //     'create_date' => $create_date
+        // );
+        var_dump($data);
+
+        $rules = 
+        [
+            'min' => 
+            [
+                ['customer_id', 1],
+                ['active', 0],
+                ['store_id',1],
+                ['address_id',1]
+
+            ],
+            'max' =>
+            [
+                ['active',1],
+                ['store_id',2],
+            ],
+            'email' =>
+            [
+                ['email']
+            ],
+
+        ];
+
+        // Change the default language to French.
+        //$validator = new Validator($data, [], "fr");
+        $validator = new Validator($data);
+        $validator->rules($rules);
+
+        if ($validator->validate()) {
+            echo "valid";
+            return true;
+        } else {
+            echo "not valid";
+            return false;
+        }
+        
     }
 
     public static function validatePostActor(array $data)

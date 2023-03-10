@@ -9,7 +9,7 @@ use Vanier\Api\controllers\FilmsController;
 use Vanier\Api\controllers\CustomersController;
 use Vanier\Api\controllers\CategoriesController;
 use Vanier\Api\middleware\ContentNegotiationMiddleware;
-
+use Vanier\Api\models\CustomersModel;
 
 require __DIR__ . '/vendor/autoload.php';
  // Include the file that contains the application's global configuration settings,
@@ -57,23 +57,23 @@ $app->setBasePath("/films-api");
 // Films routing 
 $app->get('/films', [FilmsController::class, 'handleGetAllFilms']);
 $app->get('/films/{film_id}', [FilmsController::class, 'handleGetFilmById']);
+// post - create films
+$app->post('/films',[FilmsController::class,'handleCreateFilms']);
 
 // customer routing
 $app->get('/customers',[CustomersController::class, 'handleGetAllCustomers']);
 $app->get('/customers/{customer_id}/films',[CustomersController::class, 'handleGetFilmByCustomerId']);
+// update
+$app->put('/customers', [CustomersController::class, 'handleUpdateCustomers']);
 
 // Actor routing
 $app->get('/actors', [ActorsController::class, 'handleGetAllActors']);
 $app->get('/actors/{actor_id}/films', [ActorsController::class, 'handleFilmByActorsId']);
-
-// categories
-$app->get('/categories/{category_id}/films', [CategoriesController::class, 'handleGetAllFilmsByCategory']);
-
 // post - create actors
 $app->post('/actors', [ActorsController::class, 'handleCreateActors']);
 
-// post - create films
-$app->post('/films',[FilmsController::class,'handleCreateFilms']);
+// categories
+$app->get('/categories/{category_id}/films', [CategoriesController::class, 'handleGetAllFilmsByCategory']);
 
 
 //This is a middleware that should be disabled/enabled later.

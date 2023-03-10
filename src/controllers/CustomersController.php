@@ -8,6 +8,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Exception\HttpBadRequestException;
+use Vanier\Api\exceptions\HttpConflict;
 use Vanier\Api\Models\CustomersModel;
 use Vanier\Api\exceptions\HttpNotAcceptableException;
 use Vanier\Api\exceptions\HttpBadRequest;
@@ -34,7 +35,17 @@ class CustomersController
     {
         $this->customer_model = new CustomersModel();
     }
-    // Callback - need to return response
+
+
+    /**
+     * Summary of handleGetAllCustomers
+     * @param Request $request
+     * @param Response $response
+     * @throws HttpUnprocessableContent
+     * @throws HttpBadRequest
+     * @throws HttpNotFound
+     * @return Response
+     */
     public function handleGetAllCustomers(Request $request, Response $response)
     {
 
@@ -141,7 +152,7 @@ class CustomersController
         } elseif (!$hasKey['from_rentalDate'] && $hasKey['to_rentalDate']) {
             throw new HttpBadRequest($request, "required parameter : from_rentalDate");
         } elseif ($hasKey['from_rentalDate'] && $hasKey['to_rentalDate']) {
-            $date = ['from_rentalDate'=> $filters['from_rentalDate'], 'to_rentalDate'=> $filters['to_rentalDate']];
+            $date = ['from_rentalDate' => $filters['from_rentalDate'], 'to_rentalDate' => $filters['to_rentalDate']];
             if (!ValidateHelper::validateDateInput($date)) {
                 throw new HttpBadRequest($request, "expected from_rentalDate and to_rentalDate dateformat 'yyyy-mm-dd' please check the documentation");
             }
@@ -160,6 +171,37 @@ class CustomersController
         $response->getBody()->write($json_data);
         return $response->withStatus(StatusCodeInterface::STATUS_OK)->withHeader("Content-type", "application/json");
     }
+
+
+    public function handleUpdateCustomers(Request $request, Response $response)
+    {
+
+        // 1. ) to retrieve the data from the request
+        $data = $request->getParsedBody();
+        ValidateHelper::validatePutCustomer();exit;
+        // 2. ) validate
+        // check if the body is empty
+        if (!isset($data)) {
+            throw new HttpConflict($request);
+        }
+
+
+        // 2. ) validate
+        // check if the body is empty
+        if (!isset($data)) {
+            throw new HttpConflict($request);
+        }
+
+        // validate the body
+        foreach ($data as $film) {
+            if (!ValidateHelper::validatePostFilm($film)) {
+                throw new HttpConflict($request);
+            } else {
+                //$this->customer_model->updateCustomer($film);
+            }
+        }
+    }
+
 
     /**
      * Summary of validateParams

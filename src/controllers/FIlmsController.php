@@ -54,7 +54,7 @@ class FilmsController
                $special_features = implode(',',$sf);
                $film['special_features'] = $special_features;
             }
-            //$this->film_model->createFilm($film);
+            $this->film_model->createFilm($film);
          }
       }
 
@@ -177,8 +177,4 @@ class FilmsController
 
 
 }
-
-
-
-
 ?>
