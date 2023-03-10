@@ -178,13 +178,7 @@ class CustomersController
 
         // 1. ) to retrieve the data from the request
         $data = $request->getParsedBody();
-        ValidateHelper::validatePutCustomer();exit;
-        // 2. ) validate
-        // check if the body is empty
-        if (!isset($data)) {
-            throw new HttpConflict($request);
-        }
-
+        //ValidateHelper::validatePutCustomer($data);exit;
 
         // 2. ) validate
         // check if the body is empty
@@ -193,13 +187,21 @@ class CustomersController
         }
 
         // validate the body
-        foreach ($data as $film) {
-            if (!ValidateHelper::validatePostFilm($film)) {
+        foreach ($data as $customer) {
+            if (!ValidateHelper::validatePutCustomer($customer)) {
                 throw new HttpConflict($request);
             } else {
-                //$this->customer_model->updateCustomer($film);
+                $this->customer_model->updateCustomer($customer);
+ 
             }
         }
+
+        // return with the right status code
+        // json
+        $json_data = json_encode($data);
+        // return the response;
+        $response->getBody()->write($json_data);
+        return $response->withStatus(StatusCodeInterface::STATUS_CREATED)->withHeader("Content-type", "application/json");
     }
 
 

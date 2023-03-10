@@ -147,7 +147,10 @@ class CustomersModel extends BaseModel
 
     public function updateCustomer(array $customer)
     {
-        return $this->update('customer',$customer,['customer_id'=>$customer['customer_id']]);
+    
+        $whereClause = array(["customer_id"=>$customer['customer_id']]);
+
+        return $this->update('customer',$customer,$whereClause);
     }
 
 }

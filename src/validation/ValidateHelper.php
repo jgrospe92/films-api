@@ -159,40 +159,40 @@ class ValidateHelper
         }
     }
 
-    public static function validatePutCustomer()
+    public static function validatePutCustomer(array $data)
     {
-        // $customer_id = $data['customer_id'] ?? '';
-        // $store_id = $data['store_id'] ?? '';
-        // $first_name = $data['first_name'] ?? '';
-        // $last_name = $data['last_name'] ?? '';
-        // $email = $data['email'] ?? '';
-        // $address_id = $data['address_id'] ?? '';
-        // $active = $data['active'] ?? '';
-        // $create_date  = $data['create_date'] ?? '';
+        $customer_id = $data['customer_id'] ?? '';
+        $store_id = $data['store_id'] ?? '';
+        $first_name = $data['first_name'] ?? '';
+        $last_name = $data['last_name'] ?? '';
+        $email = $data['email'] ?? '';
+        $address_id = $data['address_id'] ?? '';
+        $active = $data['active'] ?? '';
+        $create_date  = $data['create_date'] ?? '';
 
-        $data = array(
-            'customer_id' =>1,
-            'store_id' => 2,
-            'first_name' => "jeffrey",
-            'last_name' => "Grisoe",
-            'email' => "jeffrey@gmail.com",
-            'address_id' => 1,
-            'active' => 0,
-            'create_date' => date('Y-m-d H:i:s')
+        // $data = array(
+        //     'customer_id' =>1,
+        //     'store_id' => 2,
+        //     'first_name' => "jeffrey",
+        //     'last_name' => "Grisoe",
+        //     'email' => "jeffrey@gmail.com",
+        //     'address_id' => 1,
+        //     'active' => 0,
+        //     'create_date' => date('Y-m-d H:i:s')
+        // );
+
+
+        $customer_object = array(
+            'customer_id' =>$customer_id,
+            'store_id' => $store_id,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'email' => $email,
+            'address_id' => $address_id,
+            'active' => $active,
+            'create_date' => $create_date
         );
 
-
-        // $customer_object = array(
-        //     'customer_id' =>$customer_id,
-        //     'store_id' => $store_id,
-        //     'first_name' => $first_name,
-        //     'last_name' => $last_name,
-        //     'email' => $email,
-        //     'address_id' => $address_id,
-        //     'active' => $active,
-        //     'create_date' => $create_date
-        // );
-        var_dump($data);
 
         $rules = 
         [
@@ -222,10 +222,8 @@ class ValidateHelper
         $validator->rules($rules);
 
         if ($validator->validate()) {
-            echo "valid";
             return true;
         } else {
-            echo "not valid";
             return false;
         }
         
