@@ -18,10 +18,11 @@ class ActorsModel extends BaseModel
      * @param int $id
      * @return mixed
      */
-    private function get(int $id){
+    public function get(int $id){
         $sql = "SELECT * FROM actor WHERE actor_id =:id";
         return $this->run($sql, ['id'=>$id])->fetch();
     }
+
 
     public function getAllActors(array $filters)
     {

@@ -2,6 +2,7 @@
 namespace Vanier\Api\models;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Vanier\Api\Models\BaseModel;
+use Vanier\Api\models\ActorsModel;
 /**
  * Summary of FilmsModel
  */
@@ -15,7 +16,7 @@ class FilmsModel extends BaseModel
     }
 
 
-    public function createFilms(array $film)
+    public function createFilm(array $film)
     {
         return $this->insert("film", $film);
     }
@@ -26,13 +27,14 @@ class FilmsModel extends BaseModel
      * @return array
      * Sort_by title.asc or title.desc
      */
-    public function getAll(array $filters, Request $request)
+    public function getAll(array $filters)
     {
+        $actor_model = new ActorsModel();
+
         // Queries the DB and return the list of all films
         $query_values = [];
 
-        $sql = "SELECT film.*, actor.first_name, actor.last_name, category.name as category, language.name as language from film" .
-            " inner join film_actor on film.film_id = film_actor.film_id inner join actor on actor.actor_id = film_actor.actor_id" .
+        $sql = "SELECT film.*, category.name as category, language.name as language from film" .
             " inner join film_category on film.film_id = film_category.film_id" .
             " inner join category on film_category.category_id = category.category_id inner join language on language.language_id = film.language_id WHERE 1 ";
 
@@ -94,8 +96,14 @@ class FilmsModel extends BaseModel
         if (!isset($filters["sort_by"])){
             $sql .= " GROUP BY film.film_id ";
         }
+        $films = $this->paginate($sql, $query_values);
+        foreach ($films['data'] as $key=>$value){
+            $actor = $actor_model->get($value['film_id']);
+            $value['actor'] = ["first_name"=>$actor['first_name'], "last_name"=>$actor['last_name']];
+            $films['data'][$key] = $value;
+        }
 
-        return $this->paginate($sql, $query_values);
+        return $films;
 
     }
 

@@ -36,8 +36,9 @@ class FilmsController
    {
       // 1. ) to retrieve the data from the request
       $data = $request->getParsedBody();
+  
 
-      ValidateHelper::testIn(); exit;
+      //ValidateHelper::testIn(); exit;
       
       // 2. ) validate
       // check if the body is empty
@@ -49,9 +50,7 @@ class FilmsController
          if (!ValidateHelper::validatePostFilm($film)) {
             throw new HttpConflict($request);
          } else {
-            // TODO create a mode function to create
-            //$this->film_model->createFilms($film);
-          
+            $this->film_model->createFilm($film);
          }
       }
 
@@ -72,7 +71,6 @@ class FilmsController
       define('DEFAULT_PAGE', 1);
       define("DEFAULT_PAGE_SIZE", 10);
 
-    
       // filter by title 
       $filters = $request->getQueryParams();
       
@@ -112,7 +110,7 @@ class FilmsController
       // catch any DB exceptions
       try 
       {
-         $data = $this->film_model->getAll($filters, $request);
+         $data = $this->film_model->getAll($filters);
       }
       catch (Exception $e)
       {
@@ -143,7 +141,7 @@ class FilmsController
    {
 
       $film_id = $uri_args['film_id'];
-      $dataParams = ['id'=>$film_id, "min"=>1,"max"=>1000];
+      $dataParams = ['id'=>$film_id, "min"=>1,"max"=>1500];
       if (!ValidateHelper::validateInputId($dataParams)){
          $msg = is_numeric($film_id) ? "The provided ID : " . "{". $film_id . "} is out of range" : "Invalid input: " . "{". $film_id . "}, expecting a number ";
          throw new HttpUnprocessableContent($request, $msg);

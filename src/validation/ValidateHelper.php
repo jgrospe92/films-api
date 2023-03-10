@@ -203,17 +203,32 @@ class ValidateHelper
             "rental_rate" => 0.99,
             "length" => 2,
             "replacement_cost" => 50.99,
-            "rating" => "",
+            "rating" => "G",
             "special_features" => "Deleted Scenes",
         );
 
         $validator = new Validator($data);
 
-        $validator->rules([
-            'in' => [
-                ['rating', ['G', 'PG', 'PG-13', 'R', 'NC-17']]
+        $validator->rules(
+            [
+                'in' => [
+                    ['rating', ['G', 'PG', 'PG-13', 'R', 'NC-17']]
+                ],
+                'required' => [
+                    'title', 'language_id', 'rental_duration', 'rental_rate', 'replacement_cost'
+                ],
+                'min' =>
+                [
+                    ['release_year', 2006],
+                    ['language_id', 1],
+                    ['original_language_id', 1],
+                    ['rental_duration', 1],
+                    ['rental_rate', 0],
+                    ['length', 1],
+                    ['replacement_cost', 0]
+                ]
             ]
-        ]);
+        );
 
         if ($validator->validate()) {
             echo "valid";
@@ -229,10 +244,10 @@ class ValidateHelper
         $release_year = $data['release_year'] ?? '';
         $language_id = $data['language_id'] ?? '';
         $original_language_id = $data['original_language_id'] ?? '';
-        $rental_duration = $data['rental_duration'] ?? '';
-        $rental_rate = $data['rental_rate'] ?? '';
+        $rental_duration = $data['rental_duration'] ?? 3;
+        $rental_rate = $data['rental_rate'] ?? 4.99;
         $length = $data['length'] ?? '';
-        $replacement_cost = $data['replacement_cost'] ?? '';
+        $replacement_cost = $data['replacement_cost'] ?? 10.99;
         $rating = $data['rating'] ?? 'G';
         $special_features = $data['special_features'] ?? '';
 
@@ -251,24 +266,25 @@ class ValidateHelper
             "special_features" => $special_features,
         );
 
-        $rules = [
-            // We can apply the same rule to multiple elements.
-            'required' => [
-                'title', 'language_id', 'rental_duration', 'rental_rate', 'replacement_cost'
-            ],
-            'min' =>
+        $rules =
             [
-                ['release_year', 2006],
-                ['language_id', 1],
-                ['original_language_id', 1],
-                ['rental_duration', 1],
-                ['rental_rate', 0],
-                ['length', 1],
-                ['replacement_cost', 0]
-            ],
-            'in' => ['rating', ['G', 'PG', 'PG-13', 'R', 'NC-17']],
-
-        ];
+                'in' => [
+                    ['rating', ['G', 'PG', 'PG-13', 'R', 'NC-17']]
+                ],
+                'required' => [
+                    'title', 'language_id', 'rental_duration', 'rental_rate', 'replacement_cost'
+                ],
+                'min' =>
+                [
+                    ['release_year', 2006],
+                    ['language_id', 1],
+                    ['original_language_id', 1],
+                    ['rental_duration', 1],
+                    ['rental_rate', 0],
+                    ['length', 1],
+                    ['replacement_cost', 0]
+                ]
+            ];
         // Change the default language to French.
         //$validator = new Validator($data, [], "fr");
         $validator = new Validator($film_object);
@@ -278,7 +294,6 @@ class ValidateHelper
             return true;
         } else {
             return false;
-
         }
     }
 }
