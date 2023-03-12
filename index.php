@@ -59,6 +59,8 @@ $app->get('/films', [FilmsController::class, 'handleGetAllFilms']);
 $app->get('/films/{film_id}', [FilmsController::class, 'handleGetFilmById']);
 // post - create films
 $app->post('/films',[FilmsController::class,'handleCreateFilms']);
+// update
+$app->put('/films', [FilmsController::class, 'handleUpdateFilms']);
 
 // customer routing
 $app->get('/customers',[CustomersController::class, 'handleGetAllCustomers']);

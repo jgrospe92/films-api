@@ -106,6 +106,29 @@ class FilmsModel extends BaseModel
 
     }
 
+    /**
+     * Summary of updateFilms
+     * @param array $data
+     * @return void
+     */
+    public function updateFilms(array $data)
+    {
+        $film['title'] = $data['title'];
+        $film['description'] = $data['description'] ?? '';
+        $film['release_year'] = $data['release_year'] ?? '';
+        $film['language_id'] = $data['language_id'];
+        $film['original_language_id'] = $data['original_language_id'] ?? null;
+        $film['rental_duration'] = $data['rental_duration'] ?? 3;
+        $film['rental_rate'] = $data['rental_rate'] ?? 4.99;
+        $film['length'] = $data['length'] ?? null;
+        $film['replacement_cost'] = $data['replacement_cost'] ?? 19.99;
+        $film['rating'] = $data['rating'] ?? 'G';
+        $film['special_features'] = $data['special_features'] ?? '';
+        
+    
+        $this->update('film',$film,["film_id"=>$data['film_id']] );
+    }
+
 
     /**
      * Summary of getFilmById

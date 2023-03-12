@@ -151,6 +151,33 @@ class FilmsController extends BaseController
       return $this->parsedResponseData($data, $response, StatusCodeInterface::STATUS_OK);
    }
 
+   public function handleUpdateFilms(Request $request, Response $response)
+   {
+      
+        // 1. ) to retrieve the data from the request
+        $data = $request->getParsedBody();
+        if (!isset($data)) {
+            throw new HttpConflict($request);
+        }
+
+        // validate the body
+        foreach ($data as $film) {
+            if (!ValidateHelper::validatePutFilms($film)) {
+                throw new HttpConflict($request);
+            } else {
+               
+               if (isset($film['special_features'])){
+                  $sf = array_map('ucwords',$film['special_features']);
+                  $special_features = implode(',',$sf);
+                  $film['special_features'] = $special_features;
+               }
+                $this->film_model->updateFilms($film);
+            }
+        }
+        // return parsed data
+        return $this->parsedResponseData($data, $response, StatusCodeInterface::STATUS_CREATED);
+   }
+
    /**
     * Summary of validateParams
     * @param mixed $param
