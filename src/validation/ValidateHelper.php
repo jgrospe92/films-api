@@ -165,6 +165,49 @@ class ValidateHelper
     }
 
     /**
+     * Summary of isUnique
+     * @param array $data
+     * @return bool
+     */
+    public static function isUnique(array $data)
+    { 
+        $rules =
+            [
+               
+                'containsUnique' =>
+                [
+                    ['id']
+                ],
+            ];
+
+        $validator = new Validator($data);
+        $validator->rules($rules);
+        if ($validator->validate()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static function validateId(array $data)
+    {
+        $rules = [
+            'min'=>
+            [
+                ['id', 1]
+            ]
+            ];
+
+        $validator = new Validator($data);
+        $validator->rules($rules);
+        if ($validator->validate()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Summary of validatePutCustomer
      * @param array $data
      * @return bool

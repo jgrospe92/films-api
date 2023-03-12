@@ -129,6 +129,16 @@ class FilmsModel extends BaseModel
         $this->update('film',$film,["film_id"=>$data['film_id']] );
     }
 
+    /**
+     * Summary of deleteFilms
+     * @param mixed $film_id
+     * @return void
+     */
+    public function deleteFilms($film_id)
+    {
+        $this->delete('film',['film_id'=>$film_id]);
+    }
+
 
     /**
      * Summary of getFilmById

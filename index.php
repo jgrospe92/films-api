@@ -61,6 +61,8 @@ $app->get('/films/{film_id}', [FilmsController::class, 'handleGetFilmById']);
 $app->post('/films',[FilmsController::class,'handleCreateFilms']);
 // update
 $app->put('/films', [FilmsController::class, 'handleUpdateFilms']);
+// Delete 
+$app->delete('/films', [FilmsController::class, 'handleDeleteFilms']);
 
 // customer routing
 $app->get('/customers',[CustomersController::class, 'handleGetAllCustomers']);
