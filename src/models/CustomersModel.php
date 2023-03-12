@@ -14,11 +14,22 @@ class CustomersModel extends BaseModel
         parent::__construct();
     }
 
+    /**
+     * Summary of get
+     * @param int $id
+     * @return mixed
+     */
     private function get(int $id){
         $sql = "SELECT * FROM customer WHERE customer_id =:customer_id";
         return $this->run($sql, ['customer_id'=>$id])->fetch();
     }
 
+    /**
+     * Summary of getAllCustomers
+     * @param array $filters
+     * @param Request $request
+     * @return array
+     */
     public function getAllCustomers(array $filters = [], Request $request)
     {
         // Queries the DB and return the list of all films
@@ -164,6 +175,16 @@ class CustomersModel extends BaseModel
         $customer['active'] = $data['active'];
 
         $this->update('customer',$customer,["customer_id"=>$data['customer_id']] );
+    }
+
+    /**
+     * Summary of deleteCustomer
+     * @param mixed $customer_id
+     * @return mixed
+     */
+    public function deleteCustomer($customer_id)
+    {
+       return $this->delete('customer',['customer_id'=>$customer_id]);
     }
 
 }

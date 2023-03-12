@@ -67,6 +67,8 @@ $app->get('/customers',[CustomersController::class, 'handleGetAllCustomers']);
 $app->get('/customers/{customer_id}/films',[CustomersController::class, 'handleGetFilmByCustomerId']);
 // update
 $app->put('/customers', [CustomersController::class, 'handleUpdateCustomers']);
+// Delete
+$app->delete('/customers/{customer_id}', [CustomersController::class, 'handleDeleteCustomer']);
 
 // Actor routing
 $app->get('/actors', [ActorsController::class, 'handleGetAllActors']);

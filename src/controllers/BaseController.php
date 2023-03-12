@@ -13,6 +13,14 @@ class BaseController {
         return $response->withStatus($status)->withHeader("Content-type", "application/json");
     }
 
+    public function parsedDeleteResponse(Response $response){
+
+        $data = array("statusCode"=>200, "type"=>"Delete Request", "Description"=> "Resource successfully deleted");
+        $parsedResponse = json_encode($data);
+        $response->getBody()->write($parsedResponse);
+        return $response->withStatus(StatusCodeInterface::STATUS_OK)->withHeader("Content-type", "application/json");
+    }
+
 }
 
 

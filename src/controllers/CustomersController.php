@@ -8,6 +8,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Exception\HttpBadRequestException;
+use Slim\Exception\HttpForbiddenException;
 use Vanier\Api\exceptions\HttpConflict;
 use Vanier\Api\Models\CustomersModel;
 use Vanier\Api\exceptions\HttpNotAcceptableException;
@@ -186,6 +187,34 @@ class CustomersController extends BaseController
         }
         // return parsed data
         return $this->parsedResponseData($data, $response, StatusCodeInterface::STATUS_CREATED);
+    }
+
+    /**
+     * Summary of handleDeleteCustomer
+     * @param Request $request
+     * @param Response $response
+     * @param array $uri_args
+     * @throws HttpUnprocessableContent
+     * @throws HttpForbiddenException
+     * @return Response
+     */
+    public function handleDeleteCustomer(Request $request, Response $response, array $uri_args)
+    {
+        $customer_id = $uri_args['customer_id'];
+        $dataParams = ['id' => $customer_id, 'min' => 1, 'max' => 1000];
+        $isValidated = ValidateHelper::validateInputId($dataParams);
+        if (!$isValidated) {
+            $msg = is_numeric($customer_id) ? "The provided ID : " . "{" . $customer_id . "} is out of range" : "Invalid input: " . "{" . $customer_id . "}, expecting a number ";
+            throw new HttpUnprocessableContent($request, $msg);
+        }
+        try {
+            $this->customer_model->deleteCustomer($customer_id);
+        } catch (Exception $e)
+        {
+            throw new HttpForbiddenException($request, "Can't delete resource due to FK constraint");
+        }
+        
+        return $this->parsedDeleteResponse($response);
     }
 
 
