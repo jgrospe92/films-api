@@ -89,7 +89,7 @@ class CustomersController extends BaseController
             throw new HttpNotFound($request);
         }
         // return parsed data
-        return $this->parsedResponseData($data, $response);
+        return $this->parsedResponseData($data, $response, StatusCodeInterface::STATUS_OK);
     }
 
 
@@ -163,7 +163,7 @@ class CustomersController extends BaseController
         }
 
         // return parsed data
-        return $this->parsedResponseData($data, $response);
+        return $this->parsedResponseData($data, $response, StatusCodeInterface::STATUS_OK);
     }
 
 
@@ -172,10 +172,6 @@ class CustomersController extends BaseController
 
         // 1. ) to retrieve the data from the request
         $data = $request->getParsedBody();
-        //ValidateHelper::validatePutCustomer($data);exit;
-
-        // 2. ) validate
-        // check if the body is empty
         if (!isset($data)) {
             throw new HttpConflict($request);
         }
@@ -188,9 +184,8 @@ class CustomersController extends BaseController
                 $this->customer_model->updateCustomer($customer);
             }
         }
-
         // return parsed data
-        return $this->parsedResponseData($data, $response);
+        return $this->parsedResponseData($data, $response, StatusCodeInterface::STATUS_CREATED);
     }
 
 

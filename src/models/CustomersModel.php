@@ -3,6 +3,9 @@ namespace Vanier\Api\models;
 use Vanier\Api\Models\BaseModel;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
+/**
+ * Summary of CustomersModel
+ */
 class CustomersModel extends BaseModel
 {
     private string $table_name = 'customer';
@@ -145,12 +148,22 @@ class CustomersModel extends BaseModel
 
     }
 
-    public function updateCustomer(array $customer)
+    /**
+     * Summary of updateCustomer
+     * @param array $data
+     * @return void
+     * Update customer
+     */
+    public function updateCustomer(array $data)
     {
-    
-        $whereClause = array(["customer_id"=>$customer['customer_id']]);
+        $customer['store_id'] = $data['store_id'];
+        $customer['first_name'] = $data['first_name'];
+        $customer['last_name'] = $data['last_name'];
+        $customer['email'] = $data['email'];
+        $customer['address_id'] = $data['address_id'];
+        $customer['active'] = $data['active'];
 
-        return $this->update('customer',$customer,$whereClause);
+        $this->update('customer',$customer,["customer_id"=>$data['customer_id']] );
     }
 
 }

@@ -59,7 +59,7 @@ class ActorsController extends BaseController
          }
       }
       // return parsed data
-      return $this->parsedResponseData($data, $response);
+      return $this->parsedResponseData($data, $response, StatusCodeInterface::STATUS_CREATED);
    }
 
    /**
@@ -114,7 +114,7 @@ class ActorsController extends BaseController
       }
 
       // return parsed data
-      return $this->parsedResponseData($data, $response);
+      return $this->parsedResponseData($data, $response, StatusCodeInterface::STATUS_OK);
     
    }
 
@@ -186,7 +186,7 @@ class ActorsController extends BaseController
       }
 
       // return parsed data
-      return $this->parsedResponseData($data, $response);
+      return $this->parsedResponseData($data, $response, StatusCodeInterface::STATUS_OK);
    }
 
 

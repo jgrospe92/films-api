@@ -6,11 +6,11 @@ use Fig\Http\Message\StatusCodeInterface;
 
 class BaseController {
 
-    public function parsedResponseData($data, Response $response) {
+    public function parsedResponseData($data, Response $response, $status) {
 
         $json_data = json_encode($data);
         $response->getBody()->write($json_data);
-        return $response->withStatus(StatusCodeInterface::STATUS_CREATED)->withHeader("Content-type", "application/json");
+        return $response->withStatus($status)->withHeader("Content-type", "application/json");
     }
 
 }
