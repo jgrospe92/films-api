@@ -3,6 +3,7 @@ namespace Vanier\Api\models;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Vanier\Api\Models\BaseModel;
 use Vanier\Api\models\ActorsModel;
+use Exception;
 /**
  * Summary of FilmsModel
  */
@@ -96,9 +97,15 @@ class FilmsModel extends BaseModel
             $sql .= " GROUP BY film.film_id ";
         }
         $films = $this->paginate($sql, $query_values);
+    
+        
         foreach ($films['data'] as $key=>$value){
             $actor = $actor_model->get($value['film_id']);
-            $value['actor'] = ["first_name"=>$actor['first_name'], "last_name"=>$actor['last_name']];
+            if ($actor){
+                $value['actor'] = ["first_name"=>$actor['first_name'], "last_name"=>$actor['last_name']];
+            } else {
+                $value['actor'] = ["first_name"=>'', "last_name"=>''];
+            }  
             $films['data'][$key] = $value;
         }
 
