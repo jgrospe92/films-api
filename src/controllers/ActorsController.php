@@ -7,9 +7,7 @@ use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Exception\HttpBadRequestException;
 use Vanier\Api\Models\ActorsModel;
-use Vanier\Api\exceptions\HttpNotAcceptableException;
 use Vanier\Api\exceptions\HttpBadRequest;
 use Vanier\Api\exceptions\HttpUnprocessableContent;
 use Vanier\Api\exceptions\HttpNotFound;
@@ -20,7 +18,7 @@ use Vanier\Api\Validation\ValidateHelper;
 /**
  * Summary of ActorsController
  */
-class ActorsController
+class ActorsController extends BaseController
 {
    private $actor_model = null;
 
@@ -45,8 +43,6 @@ class ActorsController
    {
       // 1. ) to retrieve the data from the request
       $data = $request->getParsedBody();
-
-
       // 2. ) validate
       // check if the body is empty
       if (!isset($data)) {
@@ -62,14 +58,8 @@ class ActorsController
           
          }
       }
-
-      // return with the right status code
-      // json
-      $json_data = json_encode($data);
-      // return the response;
-      $response->getBody()->write($json_data);
-
-      return $response->withStatus(StatusCodeInterface::STATUS_CREATED)->withHeader("Content-type", "application/json");
+      // return parsed data
+      return $this->parsedResponseData($data, $response);
    }
 
    /**
@@ -102,10 +92,9 @@ class ActorsController
       $pageSize = $filters["pageSize"] ?? self::DEFAULT_PAGE_SIZE;
 
       // check if the params is numeric, if not throw a bad request error
-      if (!is_numeric($page) || !is_numeric($pageSize)) {
+      if (!ValidateHelper::validatePageNumbers($page,$pageSize)){
          throw new HttpBadRequest($request, "expected numeric but received alpha");
       }
-
       $dataParams = ['page' => $page, 'pageSize' => $pageSize, 'pageMin' => 1, 'pageSizeMin' => 5, 'pageSizeMax' => 50];
 
       if (!ValidateHelper::validatePagingParams($dataParams)) {
@@ -124,12 +113,9 @@ class ActorsController
          throw new HttpNotFound($request);
       }
 
-      // json
-      $json_data = json_encode($data);
-      // return the response;
-      $response->getBody()->write($json_data);
-
-      return $response->withStatus(StatusCodeInterface::STATUS_OK)->withHeader("Content-type", "application/json");
+      // return parsed data
+      return $this->parsedResponseData($data, $response);
+    
    }
 
    /**
@@ -181,7 +167,7 @@ class ActorsController
       $pageSize = $filters["pageSize"] ?? self::DEFAULT_PAGE_SIZE;
 
       // check if the params is numeric, if not throw a bad request error
-      if (!is_numeric($page) || !is_numeric($pageSize)) {
+      if (!ValidateHelper::validatePageNumbers($page,$pageSize)){
          throw new HttpBadRequest($request, "expected numeric but received alpha");
       }
 
@@ -199,15 +185,8 @@ class ActorsController
          throw new HttpBadRequest($request, "Invalid request Syntax, please refer to the manual");
       }
 
-      // if the returned data is empty
-      // if (!$data) {
-      //    throw new HttpNotFound($request);
-      // }
-
-      // process the data and return the response as json format
-      $json_data = json_encode($data);
-      $response->getBody()->write($json_data);
-      return $response->withStatus(StatusCodeInterface::STATUS_OK)->withHeader("Content-type", "application/json");
+      // return parsed data
+      return $this->parsedResponseData($data, $response);
    }
 
 

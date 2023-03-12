@@ -21,7 +21,7 @@ use Vanier\Api\Validation\ValidateHelper;
  * Summary of FilmsController
  * Support operations such as getAllFilms, 
  */
-class CustomersController
+class CustomersController extends BaseController
 {
 
     private $customer_model = null;
@@ -67,7 +67,7 @@ class CustomersController
         $pageSize = $filters["pageSize"] ?? self::DEFAULT_PAGE_SIZE;
 
         // check if the params is numeric, if not throw a bad request error
-        if (!is_numeric($page) || !is_numeric($pageSize)) {
+        if (!ValidateHelper::validatePageNumbers($page, $pageSize)) {
             throw new HttpBadRequest($request, "expected numeric but received alpha");
         }
 
@@ -88,12 +88,8 @@ class CustomersController
         if (!$data['data']) {
             throw new HttpNotFound($request);
         }
-        // json
-        $json_data = json_encode($data);
-        // return the response;
-        $response->getBody()->write($json_data);
-
-        return $response->withStatus(StatusCodeInterface::STATUS_OK)->withHeader("Content-type", "application/json");
+        // return parsed data
+        return $this->parsedResponseData($data, $response);
     }
 
 
@@ -134,7 +130,7 @@ class CustomersController
         $pageSize = $filters["pageSize"] ?? self::DEFAULT_PAGE_SIZE;
 
         // check if the params is numeric, if not throw a bad request error
-        if (!is_numeric($page) || !is_numeric($pageSize)) {
+        if (!ValidateHelper::validatePageNumbers($page, $pageSize)) {
             throw new HttpBadRequest($request, "expected numeric but received alpha");
         }
 
@@ -166,10 +162,8 @@ class CustomersController
             throw new HttpBadRequest($request, "Invalid request Syntax, please refer to the manual");
         }
 
-        // process the data and return the response as json format
-        $json_data = json_encode($data);
-        $response->getBody()->write($json_data);
-        return $response->withStatus(StatusCodeInterface::STATUS_OK)->withHeader("Content-type", "application/json");
+        // return parsed data
+        return $this->parsedResponseData($data, $response);
     }
 
 
@@ -192,16 +186,11 @@ class CustomersController
                 throw new HttpConflict($request);
             } else {
                 $this->customer_model->updateCustomer($customer);
- 
             }
         }
 
-        // return with the right status code
-        // json
-        $json_data = json_encode($data);
-        // return the response;
-        $response->getBody()->write($json_data);
-        return $response->withStatus(StatusCodeInterface::STATUS_CREATED)->withHeader("Content-type", "application/json");
+        // return parsed data
+        return $this->parsedResponseData($data, $response);
     }
 
 

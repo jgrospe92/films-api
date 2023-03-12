@@ -7,12 +7,9 @@ use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Exception\HttpBadRequestException;
 use Vanier\Api\Models\CategoriesModel;
-use Vanier\Api\exceptions\HttpNotAcceptableException;
 use Vanier\Api\exceptions\HttpBadRequest;
 use Vanier\Api\exceptions\HttpUnprocessableContent;
-use Vanier\Api\exceptions\HttpNotFound;
 use Vanier\Api\Validation\ValidateHelper;
 
 
@@ -20,7 +17,7 @@ use Vanier\Api\Validation\ValidateHelper;
  * Summary of FilmsController
  * Support operations such as getAllFilms, 
  */
-class CategoriesController
+class CategoriesController extends BaseController
 {
 
     private $categories_model = null;
@@ -63,7 +60,7 @@ class CategoriesController
         $pageSize = $filters["pageSize"] ?? self::DEFAULT_PAGE_SIZE;
 
         // check if the params is numeric, if not throw a bad request error
-        if (!is_numeric($page) || !is_numeric($pageSize)) {
+        if (!ValidateHelper::validatePageNumbers($page, $pageSize)) {
             throw new HttpBadRequest($request, "expected numeric but received alpha");
         }
 
@@ -76,17 +73,13 @@ class CategoriesController
         $this->categories_model->setPaginationOptions($page, $pageSize);
         // catch any DB exceptions
         try {
-            $data = $this->categories_model->getAllFilmsByCategory($category_id,$filters);
+            $data = $this->categories_model->getAllFilmsByCategory($category_id, $filters);
         } catch (Exception $e) {
             throw new HttpBadRequest($request, "Invalid request Syntax, please refer to the manual");
         }
 
-        // json
-        $json_data = json_encode($data);
-        // return the response;
-        $response->getBody()->write($json_data);
-
-        return $response->withStatus(StatusCodeInterface::STATUS_OK)->withHeader("Content-type", "application/json");
+        // return parsed data
+        return $this->parsedResponseData($data, $response);
     }
 
 

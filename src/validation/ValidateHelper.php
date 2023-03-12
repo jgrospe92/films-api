@@ -12,6 +12,11 @@ use Vanier\Api\Validations\Validator;
 class ValidateHelper
 {
 
+    /**
+     * Summary of validatePagingParams
+     * @param array $dataParams
+     * @return bool
+     */
     public static function validatePagingParams(array $dataParams)
     {
 
@@ -159,6 +164,11 @@ class ValidateHelper
         }
     }
 
+    /**
+     * Summary of validatePutCustomer
+     * @param array $data
+     * @return bool
+     */
     public static function validatePutCustomer(array $data)
     {
         $customer_id = $data['customer_id'] ?? '';
@@ -183,7 +193,7 @@ class ValidateHelper
 
 
         $customer_object = array(
-            'customer_id' =>$customer_id,
+            'customer_id' => $customer_id,
             'store_id' => $store_id,
             'first_name' => $first_name,
             'last_name' => $last_name,
@@ -194,27 +204,27 @@ class ValidateHelper
         );
 
 
-        $rules = 
-        [
-            'min' => 
+        $rules =
             [
-                ['customer_id', 1],
-                ['active', 0],
-                ['store_id',1],
-                ['address_id',1]
+                'min' =>
+                [
+                    ['customer_id', 1],
+                    ['active', 0],
+                    ['store_id', 1],
+                    ['address_id', 1]
 
-            ],
-            'max' =>
-            [
-                ['active',1],
-                ['store_id',2],
-            ],
-            'email' =>
-            [
-                ['email']
-            ],
+                ],
+                'max' =>
+                [
+                    ['active', 1],
+                    ['store_id', 2],
+                ],
+                'email' =>
+                [
+                    ['email']
+                ],
 
-        ];
+            ];
 
         // Change the default language to French.
         //$validator = new Validator($data, [], "fr");
@@ -226,9 +236,13 @@ class ValidateHelper
         } else {
             return false;
         }
-        
     }
 
+    /**
+     * Summary of validatePostActor
+     * @param array $data
+     * @return bool
+     */
     public static function validatePostActor(array $data)
     {
         $first_name = $data['first_name'] ?? '';
@@ -279,7 +293,7 @@ class ValidateHelper
             "length" => 2,
             "replacement_cost" => 50.99,
             "rating" => "G",
-            "special_features" => array_map('ucwords',['Commentaries','deleted scenes']),
+            "special_features" => array_map('ucwords', ['Commentaries', 'deleted scenes']),
         );
 
         var_dump($data['special_features']);
@@ -291,7 +305,7 @@ class ValidateHelper
                 'in' => [
                     ['rating', ['G', 'PG', 'PG-13', 'R', 'NC-17']]
                 ],
-                'subset' => [['special_features', ['Trailers','Commentaries','Deleted Scenes','Behind The Scenes']]],
+                'subset' => [['special_features', ['Trailers', 'Commentaries', 'Deleted Scenes', 'Behind The Scenes']]],
                 'required' => [
                     'title', 'language_id', 'rental_duration', 'rental_rate', 'replacement_cost'
                 ],
@@ -315,6 +329,11 @@ class ValidateHelper
         }
     }
 
+    /**
+     * Summary of validatePostFilm
+     * @param array $data
+     * @return bool
+     */
     public static function validatePostFilm(array $data)
     {
         $title = $data['title'] ?? '';
@@ -341,7 +360,7 @@ class ValidateHelper
             "length" => $length,
             "replacement_cost" => $replacement_cost,
             "rating" => $rating,
-            "special_features" => array_map('ucwords',$special_features),
+            "special_features" => array_map('ucwords', $special_features),
         );
 
         $rules =
@@ -349,7 +368,7 @@ class ValidateHelper
                 'in' => [
                     ['rating', ['G', 'PG', 'PG-13', 'R', 'NC-17']]
                 ],
-                'subset' => [['special_features', ['Trailers','Commentaries','Deleted Scenes','Behind The Scenes']]],
+                'subset' => [['special_features', ['Trailers', 'Commentaries', 'Deleted Scenes', 'Behind The Scenes']]],
                 'required' => [
                     'title', 'language_id', 'rental_duration', 'rental_rate', 'replacement_cost'
                 ],
@@ -378,5 +397,20 @@ class ValidateHelper
         } else {
             return false;
         }
+    }
+
+    /**
+     * Summary of validatePageNumbers
+     * @param mixed $page
+     * @param mixed $pageSize
+     * @return bool
+     */
+    public static function validatePageNumbers($page, $pageSize)
+    {
+        if (!is_numeric($page) || !is_numeric($pageSize)) {
+            return false;
+        }
+        return true;
+
     }
 }

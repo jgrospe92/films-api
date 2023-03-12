@@ -21,7 +21,7 @@ use Vanier\Api\Validation\ValidateHelper;
  * Summary of FilmsController
  * Support operations such as getAllFilms
  */
-class FilmsController
+class FilmsController extends BaseController
 {
 
    private $film_model = null;
@@ -58,12 +58,8 @@ class FilmsController
          }
       }
 
-      // return with the right status code
-      // json
-      $json_data = json_encode($data);
-      // return the response;
-      $response->getBody()->write($json_data);
-      return $response->withStatus(StatusCodeInterface::STATUS_CREATED)->withHeader("Content-type", "application/json");
+      // return parsed data
+      return $this->parsedResponseData($data, $response);
    }
 
 
@@ -95,10 +91,9 @@ class FilmsController
       $page = $filters["page"] ?? DEFAULT_PAGE;
       $pageSize = $filters["pageSize"] ?? DEFAULT_PAGE_SIZE;
 
-        // check if the params is numeric, if not throw a bad request error
-        if (!is_numeric($page) || !is_numeric($pageSize))
-        {
-           throw new HttpBadRequest($request, "expected numeric but received alpha");
+         // check if the params is numeric, if not throw a bad request error
+         if (!ValidateHelper::validatePageNumbers($page, $pageSize)) {
+            throw new HttpBadRequest($request, "expected numeric but received alpha");
         }
 
       $dataParams = ['page' => $page, 'pageSize' => $pageSize, 'pageMin' => 1, 'pageSizeMin' => 5, 'pageSizeMax' => 10];
@@ -123,12 +118,9 @@ class FilmsController
       if (!$data['data']){
          throw new HttpNotFound($request, "please check your query parameter or consult the documentation");
       }
-      // json
-      $json_data = json_encode($data);
-      // return the response;
-      $response->getBody()->write($json_data);
 
-      return $response->withStatus(StatusCodeInterface::STATUS_OK)->withHeader("Content-type", "application/json");
+      // return parsed data
+      return $this->parsedResponseData($data, $response);
    }
 
 
@@ -154,10 +146,9 @@ class FilmsController
       if (!$data){
          throw new HttpNotFound($request);
       }
-      $json_data = json_encode($data);
-      $response->getBody()->write($json_data);
 
-      return $response->withStatus(StatusCodeInterface::STATUS_OK)->withHeader("Content-type", "application/json");
+      // return parsed data
+      return $this->parsedResponseData($data, $response);
    }
 
    /**
@@ -177,4 +168,3 @@ class FilmsController
 
 
 }
-?>
