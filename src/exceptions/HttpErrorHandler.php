@@ -17,6 +17,9 @@ use Vanier\Api\exceptions\HttpConflict;
 use Exception;
 use Throwable;
 
+/**
+ * Summary of HttpErrorHandler
+ */
 class HttpErrorHandler extends ErrorHandler
 {
     public const BAD_REQUEST = 'BAD_REQUEST';
@@ -30,6 +33,10 @@ class HttpErrorHandler extends ErrorHandler
     public const UNPROCESSABLE_CONTENT = "UNPROCESSABLE_CONTENT";
     public const CONFLICT = "CONFLICT";
     
+    /**
+     * Summary of respond
+     * @return ResponseInterface
+     */
     protected function respond(): ResponseInterface
     {
         $exception = $this->exception;

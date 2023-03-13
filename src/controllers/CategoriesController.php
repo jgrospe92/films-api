@@ -16,7 +16,8 @@ use Vanier\Api\Validation\ValidateHelper;
 
 /**
  * Summary of FilmsController
- * Support operations such as getAllFilms, 
+ * Support operations such as
+ * handleGetAllFilmsByCategory
  */
 class CategoriesController extends BaseController
 {
@@ -27,12 +28,24 @@ class CategoriesController extends BaseController
     const DEFAULT_PAGE = 1;
     const DEFAULT_PAGE_SIZE = 10;
 
-    // Empty constructor
+   
+    /**
+     * Summary of __construct
+     */
     public function __construct()
     {
         $this->categories_model = new CategoriesModel();
     }
-    // Callback - need to return response
+ 
+    /**
+     * Summary of handleGetAllFilmsByCategory
+     * @param Request $request
+     * @param Response $response
+     * @param array $uri_args
+     * @throws HttpUnprocessableContent
+     * @throws HttpBadRequest
+     * @return Response
+     */
     public function handleGetAllFilmsByCategory(Request $request, Response $response, array $uri_args)
     {
         // category id
@@ -77,10 +90,6 @@ class CategoriesController extends BaseController
             $data = $this->categories_model->getAllFilmsByCategory($category_id, $filters);
         } catch (Exception $e) {
             throw new HttpBadRequest($request, "Invalid request Syntax, please refer to the manual");
-        }
-
-        if (!$data['films']['data']){
-            throw new HttpNotFound($request);
         }
 
         // return parsed data

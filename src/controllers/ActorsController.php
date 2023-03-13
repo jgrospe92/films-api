@@ -17,6 +17,10 @@ use Vanier\Api\Validation\ValidateHelper;
 
 /**
  * Summary of ActorsController
+ * handleCreateActors
+ * handleGetAllACtors
+ * handleFilmByActorsId
+ * validateParams
  */
 class ActorsController extends BaseController
 {

@@ -8,17 +8,31 @@ use Vanier\Api\Models\BaseModel;
  */
 class CategoriesModel extends BaseModel
 {
+    /**
+     * Summary of __construct
+     */
     public function __construct()
     {
         parent::__construct();
     }
 
+    /**
+     * Summary of get
+     * @param mixed $category_id
+     * @return mixed
+     */
     public function get($category_id)
     {
         $sql = "SELECT * from category WHERE category_id =:id";
         return $this->run($sql, ['id'=>$category_id])->fetch();
     }
 
+    /**
+     * Summary of getAllFilmsByCategory
+     * @param mixed $category_id
+     * @param mixed $filters
+     * @return array
+     */
     public function getAllFilmsByCategory($category_id, $filters){
         // get category by id
         $category = $this->get($category_id);

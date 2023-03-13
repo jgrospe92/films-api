@@ -23,6 +23,11 @@ class ActorsModel extends BaseModel
         return $this->run($sql, ['id'=>$id])->fetch();
     }
 
+    /**
+     * Summary of getAllActors
+     * @param array $filters
+     * @return array
+     */
     public function getAllActors(array $filters)
     {
         // Queries the DB and return the list of all films

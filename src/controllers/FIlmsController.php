@@ -18,7 +18,11 @@ use Vanier\Api\Validation\ValidateHelper;
 
 /**
  * Summary of FilmsController
- * Support operations such as getAllFilms
+ * Support operations such
+ * handleCreateFilms
+ * handleGetAllFilms
+ * handleUpdateFilms
+ * handleDeleteFilms
  */
 class FilmsController extends BaseController
 {

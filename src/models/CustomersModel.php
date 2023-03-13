@@ -12,6 +12,9 @@ class CustomersModel extends BaseModel
 {
     private string $table_name = 'customer';
 
+    /**
+     * Summary of __construct
+     */
     public function __construct(){
         parent::__construct();
     }

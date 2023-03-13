@@ -18,7 +18,11 @@ use Vanier\Api\Validation\ValidateHelper;
 
 /**
  * Summary of FilmsController
- * Support operations such as getAllFilms, 
+ * Support operations such as
+ * handleGetAllCustomers 
+ * handleGetFilmByCustomerId
+ * handleUpdateCustomers
+ * handleDeleteCustomer
  */
 class CustomersController extends BaseController
 {
@@ -170,6 +174,13 @@ class CustomersController extends BaseController
     }
 
 
+    /**
+     * Summary of handleUpdateCustomers
+     * @param Request $request
+     * @param Response $response
+     * @throws HttpConflict
+     * @return Response
+     */
     public function handleUpdateCustomers(Request $request, Response $response)
     {
 

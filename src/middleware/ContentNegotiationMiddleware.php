@@ -11,12 +11,24 @@ use Slim\Psr7\Response;
 
 
 
+/**
+ * Summary of ContentNegotiationMiddleware
+ */
 class  ContentNegotiationMiddleware implements MiddlewareInterface
 {
 
+    /**
+     * Summary of __construct
+     */
     public function __construct(){
 
     }
+    /**
+     * Summary of process
+     * @param Request $request
+     * @param RequestHandler $handler
+     * @return Response
+     */
     public function process(Request $request, RequestHandler $handler): Response
     {
 

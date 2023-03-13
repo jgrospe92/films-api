@@ -12,11 +12,19 @@ class FilmsModel extends BaseModel
 
     private $table_name = "film";
   
+    /**
+     * Summary of __construct
+     */
     public function __construct(){
         parent::__construct();
     }
 
 
+    /**
+     * Summary of createFilm
+     * @param array $film
+     * @return bool|string
+     */
     public function createFilm(array $film)
     {
         return $this->insert("film", $film);
