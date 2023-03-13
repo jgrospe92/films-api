@@ -185,6 +185,10 @@ class ActorsController extends BaseController
          throw new HttpBadRequest($request, "Invalid request Syntax, please refer to the manual");
       }
 
+      if (!$data['films']['data']){
+         throw new HttpNotFound($request);
+     }
+
       // return parsed data
       return $this->parsedResponseData($data, $response, StatusCodeInterface::STATUS_OK);
    }
