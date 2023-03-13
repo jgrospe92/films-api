@@ -167,12 +167,12 @@ class CustomersModel extends BaseModel
      */
     public function updateCustomer(array $data)
     {
-        $customer['store_id'] = $data['store_id'];
-        $customer['first_name'] = $data['first_name'];
-        $customer['last_name'] = $data['last_name'];
-        $customer['email'] = $data['email'];
-        $customer['address_id'] = $data['address_id'];
-        $customer['active'] = $data['active'];
+        $customer['store_id'] = $data['store_id'] ?? '';
+        $customer['first_name'] = $data['first_name'] ?? '';
+        $customer['last_name'] = $data['last_name'] ?? '';
+        $customer['email'] = $data['email'] ?? '';
+        $customer['address_id'] = $data['address_id'] ?? null;
+        $customer['active'] = $data['active'] ?? '';
 
         $this->update('customer',$customer,["customer_id"=>$data['customer_id']] );
     }
