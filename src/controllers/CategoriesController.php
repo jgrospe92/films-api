@@ -7,6 +7,7 @@ use Exception;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Vanier\Api\exceptions\HttpNotFound;
 use Vanier\Api\Models\CategoriesModel;
 use Vanier\Api\exceptions\HttpBadRequest;
 use Vanier\Api\exceptions\HttpUnprocessableContent;
@@ -76,6 +77,10 @@ class CategoriesController extends BaseController
             $data = $this->categories_model->getAllFilmsByCategory($category_id, $filters);
         } catch (Exception $e) {
             throw new HttpBadRequest($request, "Invalid request Syntax, please refer to the manual");
+        }
+
+        if (!$data['films']['data']){
+            throw new HttpNotFound($request);
         }
 
         // return parsed data
