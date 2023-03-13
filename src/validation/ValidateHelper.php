@@ -226,7 +226,7 @@ class ValidateHelper
         // $data = array(
         //     'customer_id' =>1,
         //     'store_id' => 2,
-        //     'first_name' => "jeffrey",
+        //     'first_name' => "",
         //     'last_name' => "Grisoe",
         //     'email' => "jeffrey@gmail.com",
         //     'address_id' => 1,
@@ -266,12 +266,20 @@ class ValidateHelper
                 [
                     ['email']
                 ],
+                'required' =>
+                [
+                    ['customer_id'],
+                    ['store_id'],
+                    ['first_name'],
+                    ['last_name'],
+                    ['address_id'],
+                ]
 
             ];
 
         // Change the default language to French.
         //$validator = new Validator($data, [], "fr");
-        $validator = new Validator($data);
+        $validator = new Validator($customer_object);
         $validator->rules($rules);
 
         if ($validator->validate()) {

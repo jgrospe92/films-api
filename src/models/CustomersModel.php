@@ -1,5 +1,7 @@
 <?php
 namespace Vanier\Api\models;
+
+use PhpOption\None;
 use Vanier\Api\Models\BaseModel;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
