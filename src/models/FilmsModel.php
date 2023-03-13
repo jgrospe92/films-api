@@ -50,8 +50,8 @@ class FilmsModel extends BaseModel
 
         if (isset($filters["rating"]))
         {
-            $sql .= " AND rating =:rating ";
-            $query_values[":rating"] = $filters["rating"];
+            $sql .= " AND rating LIKE CONCAT(:rating, '%')";
+            $query_values["rating"] = $filters["rating"];
         }
 
         if (isset($filters['special_features']))
