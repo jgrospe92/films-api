@@ -27,7 +27,7 @@ class ActorsController extends BaseController
    private $actor_model = null;
 
    const DEFAULT_PAGE = 1;
-   const DEFAULT_PAGE_SIZE = 10;
+   const DEFAULT_PAGE_SIZE = 50;
 
    // Empty constructor
    public function __construct()
@@ -59,7 +59,6 @@ class ActorsController extends BaseController
          } else {
             // TODO create a mode function to create
             $this->actor_model->createActors($actor);
-          
          }
       }
       // return parsed data
@@ -96,10 +95,10 @@ class ActorsController extends BaseController
       $pageSize = $filters["pageSize"] ?? self::DEFAULT_PAGE_SIZE;
 
       // check if the params is numeric, if not throw a bad request error
-      if (!ValidateHelper::validatePageNumbers($page,$pageSize)){
+      if (!ValidateHelper::validatePageNumbers($page, $pageSize)) {
          throw new HttpBadRequest($request, "expected numeric but received alpha");
       }
-      $dataParams = ['page' => $page, 'pageSize' => $pageSize, 'pageMin' => 1, 'pageSizeMin' => 5, 'pageSizeMax' => 50];
+      $dataParams = ['page' => $page, 'pageSize' => $pageSize, 'pageMin' => 1, 'pageSizeMin' => 5, 'pageSizeMax' => 100];
 
       if (!ValidateHelper::validatePagingParams($dataParams)) {
          throw new HttpUnprocessableContent($request, "Out of range, unable to process your request, please consult the manual");
@@ -119,7 +118,6 @@ class ActorsController extends BaseController
 
       // return parsed data
       return $this->parsedResponseData($data, $response, StatusCodeInterface::STATUS_OK);
-    
    }
 
    /**
@@ -171,7 +169,7 @@ class ActorsController extends BaseController
       $pageSize = $filters["pageSize"] ?? self::DEFAULT_PAGE_SIZE;
 
       // check if the params is numeric, if not throw a bad request error
-      if (!ValidateHelper::validatePageNumbers($page,$pageSize)){
+      if (!ValidateHelper::validatePageNumbers($page, $pageSize)) {
          throw new HttpBadRequest($request, "expected numeric but received alpha");
       }
 
@@ -189,9 +187,9 @@ class ActorsController extends BaseController
          throw new HttpBadRequest($request, "Invalid request Syntax, please refer to the manual");
       }
 
-      if (!$data['films']['data']){
+      if (!$data['films']['data']) {
          throw new HttpNotFound($request);
-     }
+      }
 
       // return parsed data
       return $this->parsedResponseData($data, $response, StatusCodeInterface::STATUS_OK);

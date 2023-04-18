@@ -88,7 +88,7 @@ class FilmsController extends BaseController
    {
       // constant values
       define('DEFAULT_PAGE', 1);
-      define("DEFAULT_PAGE_SIZE", 10);
+      define("DEFAULT_PAGE_SIZE", 50);
 
       // filter by title 
       $filters = $request->getQueryParams();
@@ -114,7 +114,7 @@ class FilmsController extends BaseController
          throw new HttpBadRequest($request, "expected numeric but received alpha");
       }
 
-      $dataParams = ['page' => $page, 'pageSize' => $pageSize, 'pageMin' => 1, 'pageSizeMin' => 5, 'pageSizeMax' => 10];
+      $dataParams = ['page' => $page, 'pageSize' => $pageSize, 'pageMin' => 1, 'pageSizeMin' => 5, 'pageSizeMax' => 100];
 
       if (!ValidateHelper::validatePagingParams($dataParams)) {
          throw new HttpUnprocessableContent($request, "Out of range, unable to process your request, please consult the manual");
@@ -218,18 +218,17 @@ class FilmsController extends BaseController
       $isUnique = ValidateHelper::isUnique($films_id);
 
       if ($isUnique) {
-         foreach($data as $id){
-           
-            if (!ValidateHelper::validateId(['id'=>$id])){
+         foreach ($data as $id) {
+
+            if (!ValidateHelper::validateId(['id' => $id])) {
                $msg = is_numeric($id) ? "The provided ID : " . "{" . $id . "} is out of range" : "Invalid input: " . "{" . $id . "}, expecting a number ";
                throw new HttpBadRequest($request, $msg);
-            } else{
+            } else {
                try {
                   $this->film_model->deleteFilms($id);
-               } catch (Exception $e)
-               {
+               } catch (Exception $e) {
                   throw new HttpForbiddenException($request, "Can't delete resource due to FK constraint");
-               }        
+               }
             }
          }
       } else {

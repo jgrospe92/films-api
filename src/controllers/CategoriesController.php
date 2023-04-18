@@ -26,9 +26,9 @@ class CategoriesController extends BaseController
 
     // default constant value for page & pageSize
     const DEFAULT_PAGE = 1;
-    const DEFAULT_PAGE_SIZE = 10;
+    const DEFAULT_PAGE_SIZE = 50;
 
-   
+
     /**
      * Summary of __construct
      */
@@ -36,7 +36,7 @@ class CategoriesController extends BaseController
     {
         $this->categories_model = new CategoriesModel();
     }
- 
+
     /**
      * Summary of handleGetAllFilmsByCategory
      * @param Request $request
@@ -78,7 +78,7 @@ class CategoriesController extends BaseController
             throw new HttpBadRequest($request, "expected numeric but received alpha");
         }
 
-        $dataParams = ['page' => $page, 'pageSize' => $pageSize, 'pageMin' => 1, 'pageSizeMin' => 5, 'pageSizeMax' => 10];
+        $dataParams = ['page' => $page, 'pageSize' => $pageSize, 'pageMin' => 1, 'pageSizeMin' => 5, 'pageSizeMax' => 100];
 
         if (!ValidateHelper::validatePagingParams($dataParams)) {
             throw new HttpUnprocessableContent($request, "Out of range, unable to process your request, please consult the manual");

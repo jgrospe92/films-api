@@ -31,7 +31,7 @@ class CustomersController extends BaseController
 
     // default constant value for page & pageSize
     const DEFAULT_PAGE = 1;
-    const DEFAULT_PAGE_SIZE = 10;
+    const DEFAULT_PAGE_SIZE = 50;
 
     // Empty constructor
     public function __construct()
@@ -74,7 +74,7 @@ class CustomersController extends BaseController
             throw new HttpBadRequest($request, "expected numeric but received alpha");
         }
 
-        $dataParams = ['page' => $page, 'pageSize' => $pageSize, 'pageMin' => 1, 'pageSizeMin' => 5, 'pageSizeMax' => 10];
+        $dataParams = ['page' => $page, 'pageSize' => $pageSize, 'pageMin' => 1, 'pageSizeMin' => 5, 'pageSizeMax' => 100];
 
         if (!ValidateHelper::validatePagingParams($dataParams)) {
             throw new HttpUnprocessableContent($request, "Out of range, unable to process your request, please consult the manual");
@@ -165,7 +165,7 @@ class CustomersController extends BaseController
             throw new HttpBadRequest($request, "Invalid request Syntax, please refer to the manual");
         }
 
-        if (!$data['films']['data']){
+        if (!$data['films']['data']) {
             throw new HttpNotFound($request);
         }
 
@@ -222,11 +222,10 @@ class CustomersController extends BaseController
         }
         try {
             $this->customer_model->deleteCustomer($customer_id);
-        } catch (Exception $e)
-        {
+        } catch (Exception $e) {
             throw new HttpForbiddenException($request, "Can't delete resource due to FK constraint");
         }
-        
+
         return $this->parsedDeleteResponse($response);
     }
 

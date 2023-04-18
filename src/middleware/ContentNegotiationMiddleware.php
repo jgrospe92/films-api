@@ -1,4 +1,5 @@
 <?php
+
 namespace Vanier\Api\middleware;
 
 use Fig\Http\Message\StatusCodeInterface;
@@ -20,8 +21,8 @@ class  ContentNegotiationMiddleware implements MiddlewareInterface
     /**
      * Summary of __construct
      */
-    public function __construct(){
-
+    public function __construct()
+    {
     }
     /**
      * Summary of process
@@ -34,23 +35,21 @@ class  ContentNegotiationMiddleware implements MiddlewareInterface
 
         // Get the accept header
         $accept = $request->getHeaderLine("Accept");
-    
+
 
         // verify if the request content type is application/json
         // if not, return a error response
-        if (!str_contains(APP_MEDIA_TYPE_JSON, $accept)){
+        if (!str_contains(APP_MEDIA_TYPE_JSON, $accept) && $accept != "*/*") {
 
-            $error_status = ["statuscode: " => StatusCodeInterface::STATUS_UNSUPPORTED_MEDIA_TYPE, "Message: " => "Invalid Media Type", "Description"=>"Request needs to be a json type" ];
+            $error_status = ["statuscode: " => StatusCodeInterface::STATUS_UNSUPPORTED_MEDIA_TYPE, "Message: " => "Invalid Media Type", "Description" => "Request needs to be a json type"];
             $payload = json_encode($error_status, JSON_PRETTY_PRINT);
             $response = new \Slim\Psr7\Response();
             $response->getBody()->write($payload);
             return $response->withStatus(StatusCodeInterface::STATUS_UNSUPPORTED_MEDIA_TYPE)->withAddedHeader("Content-type", APP_MEDIA_TYPE_JSON);
-
         }
 
         // if no error, handle the response normally
         $response = $handler->handle($request);
         return  $response;
-        
-        }
+    }
 }
