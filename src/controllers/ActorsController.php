@@ -13,6 +13,7 @@ use Vanier\Api\exceptions\HttpUnprocessableContent;
 use Vanier\Api\exceptions\HttpNotFound;
 use Vanier\Api\exceptions\HttpConflict;
 use Vanier\Api\Validation\ValidateHelper;
+use Hackzilla\PasswordGenerator\Generator\ComputerPasswordGenerator;
 
 
 /**
@@ -212,5 +213,21 @@ class ActorsController extends BaseController
          return true;
       }
       return false;
+   }
+
+   public function handlePassword(Request $request, Response $response, array $uri_args)
+   {
+      $generator = new ComputerPasswordGenerator();
+
+      $generator
+         ->setOptionValue(ComputerPasswordGenerator::OPTION_UPPER_CASE, true)
+         ->setOptionValue(ComputerPasswordGenerator::OPTION_LOWER_CASE, true)
+         ->setOptionValue(ComputerPasswordGenerator::OPTION_NUMBERS, true)
+         ->setOptionValue(ComputerPasswordGenerator::OPTION_SYMBOLS, false);
+
+      $password = $generator->generatePassword();
+
+      var_dump($password);
+      exit;
    }
 }

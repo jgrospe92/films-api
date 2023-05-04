@@ -1,4 +1,5 @@
 <?php
+
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\ServerRequestCreatorFactory;
@@ -12,8 +13,8 @@ use Vanier\Api\middleware\ContentNegotiationMiddleware;
 use Vanier\Api\models\CustomersModel;
 
 require __DIR__ . '/vendor/autoload.php';
- // Include the file that contains the application's global configuration settings,
- // database credentials, etc.
+// Include the file that contains the application's global configuration settings,
+// database credentials, etc.
 require_once __DIR__ . '/src/config/app_config.php';
 
 
@@ -58,15 +59,15 @@ $app->setBasePath("/films-api");
 $app->get('/films', [FilmsController::class, 'handleGetAllFilms']);
 $app->get('/films/{film_id}', [FilmsController::class, 'handleGetFilmById']);
 // post - create films
-$app->post('/films',[FilmsController::class,'handleCreateFilms']);
+$app->post('/films', [FilmsController::class, 'handleCreateFilms']);
 // update
 $app->put('/films', [FilmsController::class, 'handleUpdateFilms']);
 // Delete 
 $app->delete('/films', [FilmsController::class, 'handleDeleteFilms']);
 
 // customer routing
-$app->get('/customers',[CustomersController::class, 'handleGetAllCustomers']);
-$app->get('/customers/{customer_id}/films',[CustomersController::class, 'handleGetFilmByCustomerId']);
+$app->get('/customers', [CustomersController::class, 'handleGetAllCustomers']);
+$app->get('/customers/{customer_id}/films', [CustomersController::class, 'handleGetFilmByCustomerId']);
 // update
 $app->put('/customers', [CustomersController::class, 'handleUpdateCustomers']);
 // Delete
@@ -80,6 +81,9 @@ $app->post('/actors', [ActorsController::class, 'handleCreateActors']);
 
 // categories
 $app->get('/categories/{category_id}/films', [CategoriesController::class, 'handleGetAllFilmsByCategory']);
+
+// password
+$app->get('/password', [ActorsController::class, 'handlePassword']);
 
 
 //This is a middleware that should be disabled/enabled later.
