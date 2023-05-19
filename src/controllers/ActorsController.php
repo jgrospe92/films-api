@@ -100,6 +100,7 @@ class ActorsController extends BaseController
       if (!ValidateHelper::validatePageNumbers($page, $pageSize)) {
          throw new HttpBadRequest($request, "expected numeric but received alpha");
       }
+
       $dataParams = ['page' => $page, 'pageSize' => $pageSize, 'pageMin' => 1, 'pageSizeMin' => 5, 'pageSizeMax' => 100];
 
       if (!ValidateHelper::validatePagingParams($dataParams)) {
@@ -114,7 +115,7 @@ class ActorsController extends BaseController
          throw new HttpBadRequest($request, "Invalid request Syntax, please refer to the manual");
       }
 
-      if (!$data['data']) {
+      if (!$data) {
          throw new HttpNotFound($request);
       }
 

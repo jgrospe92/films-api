@@ -1,6 +1,7 @@
 <?php
 
 namespace Vanier\Api\models;
+
 use Vanier\Api\Models\BaseModel;
 
 /**
@@ -18,9 +19,10 @@ class ActorsModel extends BaseModel
      * @param int $id
      * @return mixed
      */
-    public function get(int $id){
+    public function get(int $id)
+    {
         $sql = "SELECT * FROM actor WHERE actor_id =:id";
-        return $this->run($sql, ['id'=>$id])->fetch();
+        return $this->run($sql, ['id' => $id])->fetch();
     }
 
     /**
@@ -56,7 +58,8 @@ class ActorsModel extends BaseModel
             }
         }
 
-        return $this->paginate($sql, $query_values);
+        return $this->run($sql, $query_values)->fetchAll();
+        //return $this->paginate($sql, $query_values);
     }
 
     /**
@@ -67,7 +70,6 @@ class ActorsModel extends BaseModel
     public function getActorById(int $id)
     {
         $sql = "SELECT * FROM actor WHERE actor_id =: id";
-        
     }
 
     /**
@@ -103,8 +105,7 @@ class ActorsModel extends BaseModel
             $sql .= " AND rating LIKE CONCAT(:rating, '%')";
             $query_values[":rating"] = $filters["rating"];
         }
-        if (isset($filters['film_length']))
-        {
+        if (isset($filters['film_length'])) {
             $sql .= " AND length >= :film_length";
             $query_values[":film_length"] = $filters["film_length"];
         }
@@ -125,7 +126,7 @@ class ActorsModel extends BaseModel
         }
 
         $films =  $this->paginate($sql, $query_values);
-        return   array("actor"=>$actor, "films"=>$films);
+        return   array("actor" => $actor, "films" => $films);
     }
 
 
