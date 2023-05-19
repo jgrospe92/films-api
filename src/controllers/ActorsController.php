@@ -84,9 +84,10 @@ class ActorsController extends BaseController
          foreach ($filters as $key => $value) {
             if (!$this->validateParams($key)) {
                throw new HttpUnprocessableContent($request, "Invalid query parameter : " . "{" . $key . "}");
-            } elseif (empty($value)) {
-               throw new HttpUnprocessableContent($request, "Please provide query value for : " . "{" . $key . "}");
             }
+            // elseif (empty($value)) {
+            //    throw new HttpUnprocessableContent($request, "Please provide query value for : " . "{" . $key . "}");
+            // }
          }
       }
 
