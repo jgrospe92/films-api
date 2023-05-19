@@ -133,6 +133,7 @@ class ActorsController extends BaseController
     */
    public function handleFilmByActorsId(Request $request, Response $response, array $uri_args)
    {
+
       $actor_id = $uri_args['actor_id'];
       $dataParams = ['id' => $actor_id, 'min' => 1, 'max' => 2000];
       $isValidated = ValidateHelper::validateInputId($dataParams);
@@ -174,10 +175,11 @@ class ActorsController extends BaseController
          throw new HttpBadRequest($request, "expected numeric but received alpha");
       }
 
-      $paginateParams = ['page' => $page, 'pageSize' => $pageSize, 'pageMin' => 1, 'pageSizeMin' => 5, 'pageSizeMax' => 10];
-      if (!ValidateHelper::validatePagingParams($paginateParams)) {
-         throw new HttpUnprocessableContent($request, "Out of range, unable to process your request, please consult the manual");
-      }
+      //$paginateParams = ['page' => $page, 'pageSize' => $pageSize, 'pageMin' => 1, 'pageSizeMin' => 5, 'pageSizeMax' => 10];
+
+      // if (!ValidateHelper::validatePagingParams($paginateParams)) {
+      //    throw new HttpUnprocessableContent($request, "Out of range, unable to process your request, please consult the manual");
+      // }
 
       // set pagination
       $this->actor_model->setPaginationOptions($page, $pageSize);
